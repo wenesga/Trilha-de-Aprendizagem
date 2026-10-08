@@ -1,0 +1,16 @@
+{
+  "name": "Trilha de Aprendizagem",
+  "short_name": "Trilha",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f4e9a",
+  "icons": [
+    {
+      "src": "logo.svg?v=2",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

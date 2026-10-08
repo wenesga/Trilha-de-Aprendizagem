@@ -1,0 +1,340 @@
+{
+  "perimetro_area_figuras_planas": {
+    "titulo": "Perímetro e Área de Figuras Planas",
+    "icone": "📐",
+    "descricao": "Calcule perímetro e área de retângulos, triângulos e círculos.",
+    "tipo": "dinamico",
+    "teoria": [
+      {
+        "titulo": "O que são perímetro e área",
+        "texto": "**Perímetro** é a medida do contorno de uma figura — a soma de todos os lados. Serve, por exemplo, para saber quantos metros de cerca são necessários para fechar um terreno.\n\n**Área** é a medida do espaço que a figura ocupa por dentro. É medida em unidades ao quadrado (m², cm², km²...). Serve, por exemplo, para calcular quanto piso é preciso comprar para cobrir um cômodo.\n\nDuas figuras podem ter o mesmo perímetro e áreas diferentes — e o contrário também acontece."
+      },
+      {
+        "titulo": "Fórmulas das figuras planas",
+        "texto": "**Retângulo** (base $b$, altura $h$):\n$$P = 2(b + h) \\qquad A = b \\cdot h$$\n\n**Quadrado** (lado $l$):\n$$P = 4l \\qquad A = l^2$$\n\n**Triângulo** (base $b$, altura $h$):\n$$A = \\frac{b \\cdot h}{2}$$\n\n**Círculo** (raio $r$, usando $\\pi \\approx 3{,}14$):\n$$A = \\pi \\cdot r^2$$"
+      },
+      {
+        "titulo": "Exemplo resolvido passo a passo",
+        "texto": "Um terreno retangular mede 8m de largura por 5m de comprimento.\n\n**Perímetro:**\n$$P = 2(8 + 5) = 2 \\cdot 13 = 26 \\text{ m}$$\n\n**Área:**\n$$A = 8 \\cdot 5 = 40 \\text{ m}^2$$\n\nOu seja: são necessários 26m de cerca para fechar o terreno, e ele tem 40m² de espaço interno."
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "Perímetro de um terreno retangular",
+        "pergunta": "Um terreno retangular mede 8m de largura por 5m de comprimento. Qual é o perímetro desse terreno, em metros?",
+        "resposta": "26",
+        "tipo": "numero",
+        "pontos": 10,
+        "bncc": ""
+      },
+      {
+        "titulo": "Área de um terreno retangular",
+        "pergunta": "Esse mesmo terreno (8m de largura por 5m de comprimento) tem qual área, em metros quadrados?",
+        "resposta": "40",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": "EF08MA19"
+      },
+      {
+        "titulo": "Área de um triângulo",
+        "pergunta": "Um triângulo tem base 10cm e altura 6cm. Qual é a sua área, em cm²?",
+        "resposta": "30",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": "EF08MA19"
+      },
+      {
+        "titulo": "Área de um quadrado",
+        "pergunta": "Um quadrado tem lado 7cm. Qual é a sua área, em cm²?",
+        "resposta": "49",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": "EF08MA19"
+      },
+      {
+        "titulo": "Área de um círculo",
+        "pergunta": "Uma pizza circular tem raio 10cm. Usando π ≈ 3,14, qual é a área aproximada dessa pizza, em cm²?",
+        "resposta": "314",
+        "tipo": "numero",
+        "pontos": 25,
+        "bncc": "EF08MA19"
+      }
+    ]
+  },
+  "estatistica": {
+    "titulo": "Estatística Descritiva",
+    "icone": "📊",
+    "tipo": "estatico",
+    "descricao": "Medidas de tendência central e dispersão calculadas sobre um conjunto de dados."
+  },
+  "estatistica_frequencia": {
+    "titulo": "Tabela e Gráfico de Frequência",
+    "icone": "📶",
+    "tipo": "estatico",
+    "descricao": "Organize uma amostra em faixas e leia o gráfico de frequência resultante."
+  },
+  "estatistica_leitura_grafica": {
+    "titulo": "Leitura Crítica de Gráficos",
+    "icone": "🔍",
+    "tipo": "estatico",
+    "descricao": "Aprenda a desconfiar de gráfico e pesquisa da mídia: escala manipulada e amostra não representativa."
+  },
+  "estatistica_comparacao_diagramas": {
+    "titulo": "Comparando Diagramas",
+    "icone": "📦",
+    "tipo": "estatico",
+    "descricao": "Histograma, box-plot e ramos-e-folhas: três formas de olhar pra mesma amostra, cada uma boa pra uma pergunta diferente."
+  },
+  "estatistica_pesquisa_amostral": {
+    "titulo": "Planejando uma Pesquisa",
+    "icone": "📋",
+    "tipo": "estatico",
+    "descricao": "População x amostra, e como os dados de uma amostra viram um relatório de verdade: da coleta até as medidas."
+  },
+  "estatistica_tendencia": {
+    "titulo": "Relação entre Duas Variáveis",
+    "icone": "📈",
+    "tipo": "estatico",
+    "descricao": "Horas de estudo e nota: como duas variáveis se relacionam, e como uma reta ajuda a enxergar (e prever) essa relação."
+  },
+  "equacao_1_grau": {
+    "titulo": "Equação do 1º Grau",
+    "icone": "➗",
+    "descricao": "Aprenda a isolar a incógnita e resolver equações do primeiro grau passo a passo.",
+    "tipo": "dinamico",
+    "teoria": [
+      {
+        "titulo": "O que é uma equação do 1º grau?",
+        "texto": "Uma equação do 1º grau é uma igualdade com uma incógnita (geralmente chamada de **x**) que aparece sem expoente ($x^1$, ou seja, só x). Resolver a equação significa descobrir qual número, no lugar de x, torna a igualdade verdadeira.\n\n**Exemplo resolvido:** Resolva x + 5 = 12.\n\n- Para isolar o x, faça a operação inversa da soma (subtração) dos dois lados\n- x = 12 − 5\n- x = **7**"
+      },
+      {
+        "titulo": "Isolando x quando há multiplicação",
+        "texto": "Quando o x está sendo multiplicado por um número, use a operação inversa da multiplicação (a divisão) para isolar ele.\n\n**Exemplo resolvido:** Resolva 3x = 21.\n\n- Divida os dois lados por 3\n- x = 21 ÷ 3\n- x = **7**"
+      },
+      {
+        "titulo": "Equações com os dois passos juntos",
+        "texto": "Nas equações mais completas, primeiro tire o número que está somando ou subtraindo, e só depois cuide do número que está multiplicando o x.\n\n**Exemplo resolvido:** Resolva 2x + 4 = 14.\n\n- Passo 1 (tirar o +4, fazendo a operação inversa): 2x = 14 − 4 = 10\n- Passo 2 (tirar o 2 que multiplica, dividindo): x = 10 ÷ 2 = **5**\n\nEssa é a ordem que você vai seguir em toda missão: primeiro soma/subtração, depois multiplicação/divisão."
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "Isolando com subtração",
+        "pergunta": "Resolva a equação: x + 8 = 20. Qual é o valor de x?",
+        "resposta": "12",
+        "tipo": "numero",
+        "pontos": 10,
+        "bncc": "EF07MA18"
+      },
+      {
+        "titulo": "Isolando com divisão",
+        "pergunta": "Resolva a equação: 5x = 45. Qual é o valor de x?",
+        "resposta": "9",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": "EF07MA18"
+      },
+      {
+        "titulo": "Combinando os dois passos",
+        "pergunta": "Resolva a equação: 3x + 6 = 24. Qual é o valor de x?",
+        "resposta": "6",
+        "tipo": "numero",
+        "pontos": 20,
+        "bncc": "EF07MA18"
+      },
+      {
+        "titulo": "Com subtração e divisão",
+        "pergunta": "Resolva a equação: 4x - 5 = 27. Qual é o valor de x?",
+        "resposta": "8",
+        "tipo": "numero",
+        "pontos": 25,
+        "bncc": "EF07MA18"
+      }
+    ]
+  },
+  "progressao_aritmetica": {
+    "titulo": "Progressão Aritmética (PA)",
+    "icone": "🔢",
+    "descricao": "Descubra a razão de uma PA e calcule termos usando a fórmula do termo geral.",
+    "tipo": "dinamico",
+    "teoria": [
+      {
+        "titulo": "O que é uma Progressão Aritmética?",
+        "texto": "Uma Progressão Aritmética (PA) é uma sequência de números em que a diferença entre um termo e o anterior é sempre a mesma. Essa diferença constante é chamada de **razão (r)**.\n\n**Exemplo resolvido:** Na sequência (4, 7, 10, 13, ...), qual é a razão?\n\n- Basta subtrair um termo pelo termo anterior: 7 − 4 = 3\n- Confirme com outro par: 10 − 7 = 3\n- A razão é **r = 3**"
+      },
+      {
+        "titulo": "Fórmula do termo geral",
+        "texto": "Para descobrir qualquer termo de uma PA sem escrever a sequência inteira, use a fórmula do termo geral:\n\n$$a_n = a_1 + (n - 1) \\times r$$\n\nOnde $a_1$ é o primeiro termo, $r$ é a razão, e $n$ é a posição do termo que você quer descobrir.\n\n**Exemplo resolvido:** Numa PA com $a_1 = 5$ e razão 4, qual é o 6º termo ($a_6$)?\n\n- $a_6 = 5 + (6 - 1) \\times 4$\n- $a_6 = 5 + 5 \\times 4$\n- $a_6 = 5 + 20 = 25$"
+      },
+      {
+        "titulo": "Somando os termos de uma PA",
+        "texto": "Para somar os primeiros termos de uma PA, dá pra somar um por um, ou usar a fórmula da soma:\n\n$$S_n = \\frac{(a_1 + a_n) \\times n}{2}$$\n\n**Exemplo resolvido:** Some os 4 primeiros termos da PA (2, 5, 8, 11).\n\n- Somando direto: 2 + 5 + 8 + 11 = 26\n- Conferindo com a fórmula: $S_n = \\frac{(2 + 11) \\times 4}{2} = \\frac{13 \\times 4}{2} = 26$"
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "Descobrindo a razão",
+        "pergunta": "Na PA (3, 7, 11, 15, ...), qual é a razão?",
+        "resposta": "4",
+        "tipo": "numero",
+        "pontos": 10,
+        "bncc": "EM13MAT507"
+      },
+      {
+        "titulo": "Aplicando a fórmula do termo geral",
+        "pergunta": "Numa PA com a1 = 2 e razão 5, qual é o 5º termo (a5)?",
+        "resposta": "22",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": "EM13MAT507"
+      },
+      {
+        "titulo": "Termo geral com números maiores",
+        "pergunta": "Numa PA com a1 = 10 e razão 3, qual é o 7º termo (a7)?",
+        "resposta": "28",
+        "tipo": "numero",
+        "pontos": 20,
+        "bncc": "EM13MAT507"
+      },
+      {
+        "titulo": "Somando os termos",
+        "pergunta": "Some os 4 primeiros termos da PA (1, 4, 7, 10).",
+        "resposta": "22",
+        "tipo": "numero",
+        "pontos": 25,
+        "bncc": "EM13MAT507"
+      }
+    ]
+  },
+  "pensamento_computacional": {
+    "titulo": "Pensamento Computacional",
+    "icone": "💻",
+    "descricao": "Como pensar feito um cientista da computação: decompor problemas, reconhecer o custo de um algoritmo e entender os limites da automação.",
+    "tipo": "dinamico",
+    "teoria": [
+      {
+        "titulo": "Por que alguns problemas demoram mais que outros",
+        "texto": "Nem todo algoritmo cresce do mesmo jeito quando o problema fica maior.\n\nProcurar uma palavra num dicionário é rápido mesmo com milhares de páginas, porque as palavras estão em ordem: você pula direto pra região certa.\n\nJá tentar adivinhar uma senha testando **todas** as combinações possíveis fica impossível rápido: cada letra a mais multiplica o tempo, não soma. Dobrar o tamanho da senha pode multiplicar o tempo por milhões, não por dois.\n\nEssa diferença — crescer devagar (linear) ou crescer explosivamente (exponencial) — é uma das primeiras perguntas que quem trabalha com Computação aprende a fazer sobre qualquer algoritmo: o que acontece quando o problema dobra de tamanho?"
+      },
+      {
+        "titulo": "O que a Computação não consegue fazer (ainda)",
+        "texto": "Computador é ótimo em tarefas com regra clara: somar números, ordenar uma lista, comparar dois arquivos. Existe um jeito certo de fazer e o computador segue esse jeito sem cansar.\n\nO problema aparece em tarefas que exigem julgamento subjetivo: decidir se uma piada é engraçada, se uma pintura é bonita, se uma desculpa é sincera. Não existe uma fórmula matemática pra isso, depende de contexto, cultura, quem está perguntando.\n\nEntender essa fronteira, o que dá pra automatizar com uma regra e o que ainda depende de julgamento humano, é uma das ideias centrais de Pensamento Computacional. É diferente de dizer que o computador é burro: é reconhecer que tipo de problema você tem antes de tentar resolver."
+      },
+      {
+        "titulo": "Um software bom não é só rápido",
+        "texto": "Quando alguém avalia um software, funcionar é só o começo. Um aplicativo pode ser rápido e fácil de usar (boa usabilidade) e, ao mesmo tempo, guardar a senha dos usuários sem nenhuma proteção (péssima segurança).\n\nAlgumas características que costumam entrar nessa avaliação:\n- Usabilidade: é fácil de aprender a usar?\n- Segurança: protege os dados de quem usa?\n- Desempenho: responde rápido, mesmo com muita gente usando ao mesmo tempo?\n- Portabilidade: funciona em aparelhos e sistemas diferentes?\n\nUm software pode ir bem numa característica e mal em outra. Por isso avaliar software é sempre uma pergunta com mais de uma resposta, nunca só bom ou ruim."
+      },
+      {
+        "titulo": "O que é Inteligência Artificial, de verdade",
+        "texto": "Quando um serviço de streaming sugere um filme parecido com o que você acabou de assistir, isso não é mágica: é um programa que aprendeu um padrão a partir de muitos dados (o que outras pessoas parecidas com você assistiram e gostaram) e usa esse padrão pra prever o que você vai gostar também.\n\nIsso é diferente de um programa comum, que segue regras escritas por um programador passo a passo. Um sistema de Inteligência Artificial aprende o padrão a partir de exemplos, em vez de alguém escrever a regra na mão.\n\nComo qualquer ferramenta computacional, tem potencial e tem limite: aprende bem padrões parecidos com os dados que viu, mas pode errar feio em situações muito diferentes daquilo que aprendeu."
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "O custo de tentar tudo",
+        "pergunta": "Um programa demora 1 segundo para testar todas as senhas possiveis de 4 letras. Ele tem tempo de execucao exponencial: cada letra a mais multiplica o tempo gasto. O que acontece quando a senha passa a ter 8 letras, o dobro do tamanho?",
+        "alternativas": [
+          "O tempo dobra: leva 2 segundos",
+          "O tempo fica muito maior que o dobro, podendo levar horas ou mais",
+          "O tempo continua sendo 1 segundo"
+        ],
+        "resposta": "O tempo fica muito maior que o dobro, podendo levar horas ou mais",
+        "tipo": "multipla",
+        "pontos": 20,
+        "bncc": "EM13CO03"
+      },
+      {
+        "titulo": "O que a maquina nao decide sozinha",
+        "pergunta": "Qual das tarefas abaixo e a mais dificil de resolver so com uma regra fixa, porque depende de julgamento subjetivo?",
+        "alternativas": [
+          "Somar dois numeros digitados pelo usuario",
+          "Colocar uma lista de nomes em ordem alfabetica",
+          "Decidir se uma piada e engracada"
+        ],
+        "resposta": "Decidir se uma piada e engracada",
+        "tipo": "multipla",
+        "pontos": 20,
+        "bncc": "EM13CO05"
+      },
+      {
+        "titulo": "Rapido nao e a mesma coisa que bom",
+        "pergunta": "Um aplicativo de mensagens e rapido e muito facil de usar, mas guarda a senha dos usuarios sem nenhuma criptografia. Qual caracteristica de qualidade de software esta sendo negligenciada?",
+        "alternativas": [
+          "Usabilidade",
+          "Seguranca",
+          "Desempenho"
+        ],
+        "resposta": "Seguranca",
+        "tipo": "multipla",
+        "pontos": 20,
+        "bncc": "EM13CO06"
+      },
+      {
+        "titulo": "Como o app sabe o que sugerir",
+        "pergunta": "Um servico de streaming sugere filmes parecidos com base no que voce ja assistiu, aprendendo esse padrao a partir dos dados de muitos usuarios, em vez de seguir uma lista de regras escrita a mao por um programador. Isso e um exemplo do uso de:",
+        "alternativas": [
+          "Realidade Virtual",
+          "Inteligencia Artificial",
+          "Computacao Quantica"
+        ],
+        "resposta": "Inteligencia Artificial",
+        "tipo": "multipla",
+        "pontos": 20,
+        "bncc": "EM13CO10"
+      }
+    ]
+  },
+  "conteudo_b2dc9743": {
+    "titulo": "Determinantes (Regra de Cramer)",
+    "icone": "🔢",
+    "descricao": "Resolva sistemas lineares calculando determinantes.",
+    "tipo": "dinamico",
+    "teoria": [
+      {
+        "titulo": "O que é um determinante",
+        "texto": "O determinante de uma matriz 2x2 é um número calculado assim:\n\n$$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix} = a \\cdot d - b \\cdot c$$\n\nMultiplica a diagonal principal, multiplica a diagonal secundária, e subtrai.\n\n**Exemplo:**\n$$\\begin{vmatrix} 3 & 2 \\\\ 1 & 4 \\end{vmatrix} = 3 \\cdot 4 - 2 \\cdot 1 = 12 - 2 = 10$$"
+      },
+      {
+        "titulo": "Regra de Cramer",
+        "texto": "Para um sistema de duas equações e duas incógnitas:\n\n$$\\begin{cases} a_1x + b_1y = c_1 \\\\ a_2x + b_2y = c_2 \\end{cases}$$\n\nCalculam-se três determinantes:\n\n- **D** (principal): usa os coeficientes de x e y.\n- **Dx**: troca a coluna de x pelos termos independentes (c).\n- **Dy**: troca a coluna de y pelos termos independentes (c).\n\nE o resultado é:\n\n$$x = \\frac{D_x}{D} \\qquad y = \\frac{D_y}{D}$$"
+      },
+      {
+        "titulo": "Exemplo resolvido passo a passo",
+        "texto": "Sistema:\n$$\\begin{cases} 2x + y = 5 \\\\ x - y = 1 \\end{cases}$$\n\n**D** (coeficientes de x e y):\n$$D = \\begin{vmatrix} 2 & 1 \\\\ 1 & -1 \\end{vmatrix} = 2(-1) - 1(1) = -3$$\n\n**Dx** (coluna de x trocada pelos termos independentes):\n$$D_x = \\begin{vmatrix} 5 & 1 \\\\ 1 & -1 \\end{vmatrix} = 5(-1) - 1(1) = -6$$\n\n**Dy** (coluna de y trocada pelos termos independentes):\n$$D_y = \\begin{vmatrix} 2 & 5 \\\\ 1 & 1 \\end{vmatrix} = 2(1) - 5(1) = -3$$\n\nResultado:\n$$x = \\frac{-6}{-3} = 2 \\qquad y = \\frac{-3}{-3} = 1$$\n\nConferindo: $2(2) + 1 = 5$ ✓ e $2 - 1 = 1$ ✓"
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "Calculando um determinante",
+        "pergunta": "Calcule o determinante: [[3, 2], [1, 4]]. Qual o resultado?",
+        "resposta": "10",
+        "tipo": "numero",
+        "pontos": 10,
+        "bncc": ""
+      },
+      {
+        "titulo": "Determinante D do sistema",
+        "pergunta": "No sistema 2x + y = 5 e x - y = 1, calcule o determinante D (com os coeficientes de x e y).",
+        "resposta": "-3",
+        "tipo": "numero",
+        "pontos": 10,
+        "bncc": ""
+      },
+      {
+        "titulo": "Determinante Dx",
+        "pergunta": "No mesmo sistema, calcule Dx (troque a coluna de x pelos termos independentes: 5 e 1).",
+        "resposta": "-6",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": ""
+      },
+      {
+        "titulo": "Valor de x pela Regra de Cramer",
+        "pergunta": "Usando D = -3 e Dx = -6, qual o valor de x?",
+        "resposta": "2",
+        "tipo": "numero",
+        "pontos": 15,
+        "bncc": ""
+      }
+    ]
+  }
+}

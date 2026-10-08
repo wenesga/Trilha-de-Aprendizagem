@@ -1,0 +1,12 @@
+.venv
+__pycache__
+*.pyc
+.git
+.agents
+.claude
+.vscode
+arquivos
+*.log
+*.db
+banco_alunos.json*
+CLAUDE.md

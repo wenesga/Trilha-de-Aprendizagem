@@ -1,0 +1,12 @@
+[server]
+enableStaticServing = true
+runOnSave = true
+
+# Cor dos botões ativos, abas e destaques: o azul do anel do logo.
+# Os dois temas (claro e escuro) são definidos aqui de propósito: com um
+# [theme] único o Streamlit esconde o seletor de tema do menu de três pontinhos.
+[theme.light]
+primaryColor = "#1f4e9a"
+
+[theme.dark]
+primaryColor = "#3376cb"
