@@ -289,7 +289,7 @@ ARQUIVO_CONFIG = os.path.join(DIR_DADOS, "config_sistema.json")           # conf
 
 # Senha inicial do Painel do Professor.
 # O professor pode (e deve) trocá-la dentro do próprio painel, em "⚙️ Configurações".
-SENHA_PADRAO_PROFESSOR = "computa258"
+SENHA_PADRAO_PROFESSOR = "123"
 
 # Paleta de cores suaves pra destacar os cartões de "Conteúdos disponíveis" do
 # fundo (funciona em tema claro e escuro — ver CSS ".cartao-cor-*" mais abaixo).

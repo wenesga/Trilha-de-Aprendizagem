@@ -72,7 +72,7 @@ python -m venv .venv
 .venv\Scripts\streamlit run trilha_aprendizagem.py
 ```
 
-🔑 Senha padrão do Painel do Professor: `computa258`. *Troque em Configurações.*
+🔑 Senha padrão do Painel do Professor: `123`. *Troque em Configurações.*
 
 ---
 
