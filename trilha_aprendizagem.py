@@ -247,16 +247,11 @@ ARQUIVO_ALUNOS = os.path.join(DIR_DADOS, "banco_alunos.json")             # form
 ARQUIVO_ALUNOS_DB = os.path.join(DIR_DADOS, "banco_alunos.db")            # progresso dos alunos (SQLite — suporta vários alunos salvando ao mesmo tempo sem corromper dados)
 ARQUIVO_CONTEUDOS = os.path.join(DIR_DADOS, "conteudos.json")             # conteúdos cadastrados (nativos + criados pelo professor)
 ARQUIVO_CONFIG = os.path.join(DIR_DADOS, "config_sistema.json")           # configurações gerais (senha do professor)
-                                                 # ARQUIVO_LOGO, ARQUIVO_BANNER e ARQUIVO_CABECALHO ficam no topo, antes de st.set_page_config().
 
-"""
-Senha inicial do Painel do Professor. Pode ser trocada no próprio painel, em Configurações.
-"""
 SENHA_PADRAO_PROFESSOR = "123"
 
 """
-Paleta de cores suaves para destacar os cartões de conteúdo do fundo, em tema claro e escuro (ver
-CSS .cartao-cor-*). É usada em ciclo conforme novos conteúdos são cadastrados.
+Cores suaves dos cartões de conteúdo, usadas em ciclo (ver CSS .cartao-cor-*).
 """
 PALETA_CORES_CARTAO = ["azul", "roxo", "rosa", "amarelo", "verde", "ciano"]
 
@@ -275,15 +270,11 @@ separados); o agrupamento é só de navegação.
 IDS_ESTATISTICA_HUB = [ID_CONTEUDO_ESTATISTICA, ID_CONTEUDO_FREQUENCIA, ID_CONTEUDO_LEITURA_GRAFICA, ID_CONTEUDO_COMPARACAO, ID_CONTEUDO_PESQUISA_AMOSTRAL, ID_CONTEUDO_TENDENCIA]
 
 """
-Número de faixas da tabela de frequência. As faixas são calculadas a partir do menor e do maior
-valor reais da amostra (ver calcular_frequencia), para funcionar com qualquer dado cadastrado.
+Número de faixas da tabela de frequência; as faixas vêm do menor e do maior valor da amostra (ver
+calcular_frequencia).
 """
 FREQ_N_FAIXAS = 5
 
-"""
-Largura fixa (px) dos gráficos de barra de Frequência e Leitura Crítica, que têm poucas barras e
-ficariam desproporcionais esticados na coluna inteira.
-"""
 LARGURA_GRAFICO = 380
 
 """
@@ -1212,9 +1203,6 @@ def progresso_resumo_aluno():
 """
 st.markdown("""
 <style>
-    /* Limita a largura do conteúdo principal e o centraliza em monitores grandes. Não afeta a barra
-       lateral (largura fixa). Reduz o padding interno padrão do Streamlit para sobrar mais espaço
-       dentro do limite. */
     .stMainBlockContainer {
         max-width: 870px;
         padding-left: 2rem;
@@ -1249,8 +1237,6 @@ st.markdown("""
     .gamification-box { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; padding: 15px 20px; border-radius: 10px; font-size: 16px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3); }
     /* Regra sem uso no app (.gamification-box); pode ser removida. */
 
-    /* Selo de XP acima da Trilha de Missões. Usa gradiente opaco e texto branco (mesma técnica de
-       .home-banner), e não rgba() semitransparente, para se destacar do tema como um emblema. */
     .xp-destaque-missoes {
         display: inline-flex;
         align-items: center;
@@ -1265,7 +1251,6 @@ st.markdown("""
     .xp-destaque-missoes .icone { font-size: 22px; }
     .xp-destaque-missoes .valor { font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
 
-    /* Banner da página inicial */
     .home-banner {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 60%, #60a5fa 100%);
         color: white;
@@ -1289,8 +1274,6 @@ st.markdown("""
         padding: 18px; height: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         margin-bottom: 16px;
     }
-    /* Placar da turma: mesma técnica dos cartões da home (rgba() sobre o fundo, sem "color" fixo),
-       para funcionar nos dois temas. */
     .placar-caixa {
         border: 1px solid rgba(148, 163, 184, 0.4);
         border-radius: 12px;
@@ -1316,7 +1299,7 @@ st.markdown("""
     }
     .placar-nome { flex: 1; font-size: 16px; }
     .placar-xp {
-        font-variant-numeric: tabular-nums;  /* números alinhados entre as linhas */
+        font-variant-numeric: tabular-nums;  
         font-weight: 700;
         color: #16a34a;
     }
@@ -1335,9 +1318,6 @@ st.markdown("""
         height: 100%;
     }
 
-    /* Cores suaves dos cartões de "Conteúdos disponíveis" (ver PALETA_CORES_CARTAO e a key
-       "cartao_..._cor_X" de st.container). Usa rgba() de baixa opacidade para funcionar nos dois
-       temas. */
     [class*="_cor_azul"]    { background-color: rgba(59, 130, 246, 0.12) !important; border-color: rgba(59, 130, 246, 0.4) !important; }
     [class*="_cor_roxo"]    { background-color: rgba(168, 85, 247, 0.12) !important; border-color: rgba(168, 85, 247, 0.4) !important; }
     [class*="_cor_rosa"]    { background-color: rgba(236, 72, 153, 0.12) !important; border-color: rgba(236, 72, 153, 0.4) !important; }
@@ -1345,23 +1325,16 @@ st.markdown("""
     [class*="_cor_verde"]   { background-color: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.4) !important; }
     [class*="_cor_ciano"]   { background-color: rgba(6, 182, 212, 0.12) !important; border-color: rgba(6, 182, 212, 0.4) !important; }
 
-    /* Título dos painéis expansíveis (st.expander) um pouco maior, igual para conteúdo estático e
-       dinâmico (mesmo componente). */
     div[data-testid="stExpander"] summary [data-testid="stMarkdownContainer"] p {
         font-size: 20px !important;
         font-weight: 600 !important;
     }
 
-    /* Título principal de cada página (st.title, h1): reduzido do padrão do Streamlit (44px) para
-       combinar com os títulos de seção da home (28px/600 via h3), mantendo a mesma hierarquia em
-       todas as páginas. O line-height é relativo (em) e acompanha o font-size. */
     h1 {
         font-size: 28px !important;
         font-weight: 600 !important;
     }
 
-    /* Título dos cartões de "Conteúdos disponíveis" (h4): 17px/700, igual ao de .home-step-titulo.
-       Limitado a esses cartões via [class*="_cor_"] para não afetar outros h4 do app. */
     [class*="_cor_"] h4 {
         font-size: 17px !important;
         font-weight: 700 !important;
@@ -1381,16 +1354,10 @@ st.markdown("""
         height: 100%;
     }
 
-    /* Cada conteúdo cadastrado (Gerenciar Conteúdos) é um st.container(border=True): cartão com
-       borda e cantos arredondados, com estilo próprio do painel do professor, diferente do card do
-       aluno na Início. */
     div[class*="st-key-card_conteudo_"] {
         margin-bottom: 12px;
     }
 
-    /* Badges (pílulas) dentro do cartão: resumo do tipo/quantidade de
-       missões e da habilidade BNCC mapeada, visível sem precisar abrir
-       "Editar". */
     .badge-conteudo {
         display: inline-block;
         padding: 5px 14px;
@@ -1408,9 +1375,6 @@ st.markdown("""
         color: #047857;
     }
 
-    /* Cards suaves dos 3 totais de XP em Configurações (Matéria Padrão / Matérias Cadastradas /
-       Total do catálogo), no lugar de st.metric(). Reaproveitam as cores dos badges de card (índigo
-       do tipo, verde do BNCC) e um tom neutro para o total, que é a soma dos outros dois. */
     .resumo-xp-card {
         border-radius: 12px;
         padding: 14px 16px;
@@ -1469,9 +1433,6 @@ st.markdown("""
         pointer-events: none;
     }
 
-    /* Botões "Editar"/"Excluir" de cada conteúdo cadastrado: as colunas do st.columns(2) encolhem
-       para o tamanho do botão (flex: 0 0 auto), deixando o par junto e alinhado à direita, só
-       dentro do key deste container. */
     div[class*="st-key-acoes_conteudo_"] div[data-testid="stHorizontalBlock"] {
         gap: 8px !important;
         justify-content: flex-end;
@@ -1515,8 +1476,6 @@ st.markdown("""
         margin-top: -19px;
     }
 
-    /* Menu lateral: botões colados, alinhados à esquerda,
-       com destaque visual para o item ativo e hover suave no restante. */
     div[data-testid="stSidebar"] button {
         margin-bottom: 4px;
         text-align: left;
@@ -1547,15 +1506,10 @@ st.markdown("""
         border-color: #b91c1c;
     }
 
-    /* Cartões dos conteúdos (Gerenciar Conteúdos): fundo cinza suave, pra separar um
-       do outro. Transparência, pra valer no tema claro e no escuro. */
     div[class*="st-key-card_conteudo_"] {
         background-color: rgba(128, 128, 128, 0.06);
     }
 
-    /* Abas do Detalhamento por Conteúdo: formato de aba de navegador. A aba
-       ativa leva o azul do tema (traço no topo e fundo azulado); as outras ficam
-       cinza discretas. Cores com transparência, pra valer no tema claro e no escuro. */
     div[role="tablist"] {
         gap: 4px;
         border-bottom: 1px solid rgba(128, 128, 128, 0.35);
@@ -1581,10 +1535,6 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* Barrinha na borda esquerda dos itens do menu: diferencia "Matéria Padrão" (roxo/azul) de
-       "Matérias Cadastradas" (verde) em repouso, sem pintar o botão inteiro. Usa as cores dos
-       badges do Painel do Professor (.badge-conteudo-tipo / .badge-conteudo-bncc). Some quando o
-       botão está ativo (kind="primary", já azul). */
     div[class*="st-key-nav_hub_estatistica"] button[kind="secondary"] {
         border-left: 3px solid #6366f1;
     }
@@ -1619,9 +1569,6 @@ st.markdown("""
         opacity: 1;
     }
 
-    /* Rótulo do grupo "Matérias": cabeçalho do nível 2 da navegação, não clicável. Menor, em caixa
-       alta e apagado para não competir com os botões (Início e Painel do Professor são nível 1, sem
-       rótulo). */
     .sidebar-secao {
         font-size: 11px;
         font-weight: 700;
@@ -1631,8 +1578,6 @@ st.markdown("""
         margin: 4px 0 6px 4px;
     }
 
-    /* "Matérias Cadastradas" fica um pouco mais afastada do botão de cima ("📊 Estatística") que o
-       espaçamento padrão de .sidebar-secao, marcando o início de um novo grupo. */
     .sidebar-secao-espacada {
         margin-top: 16px;
     }
@@ -1655,7 +1600,6 @@ st.markdown("""
         margin: 8px 4px 24px 4px !important;
     }
 
-    /* Cabeçalho da barra lateral: logo em cima e título embaixo, ambos centralizados. */
     div[class*="st-key-sidebar_cabecalho"] {
         display: flex;
         flex-direction: column;
@@ -1752,9 +1696,6 @@ def calcular_frequencia(dados, n_faixas=FREQ_N_FAIXAS):
     for f in faixas:
         f["freq_relativa"] = (f["freq"] / total * 100) if total else 0
 
-    """
-    Faixa modal: a de maior frequência (em caso de empate, a primeira que aparece).
-    """
     faixa_moda = max(faixas, key=lambda f: f["freq"])
 
     return dict(faixas=faixas, total=total, faixa_moda=faixa_moda)
@@ -1806,10 +1747,6 @@ def calcular_ramo_folhas(dados):
 
 
 def texto_ramo_folhas(ramos):
-    """
-    Formata {ramo: [folhas]} como texto monoespaçado 'Ramo | Folhas', alinhado à direita pelo ramo
-    mais largo, a apresentação tradicional do diagrama.
-    """
     largura_ramo = max((len(str(r)) for r in ramos), default=1)
     linhas = [
         f"{str(ramo).rjust(largura_ramo)} | {' '.join(str(f) for f in folhas)}"
@@ -1820,8 +1757,7 @@ def texto_ramo_folhas(ramos):
 
 def calcular_reta_tendencia(xs, ys):
     """
-    Inclinação e intercepto da reta de tendência (regressão linear simples, mínimos quadrados) entre
-    duas variáveis numéricas, via np.polyfit.
+    Inclinação e intercepto da reta de tendência (mínimos quadrados) via np.polyfit.
     """
     inclinacao, intercepto = np.polyfit(xs, ys, 1)
     return dict(inclinacao=float(inclinacao), intercepto=float(intercepto))
@@ -1856,10 +1792,6 @@ def calcular_xp_por_desempenho(pontos_base, erros_nesta_missao):
 
 
 def verificar_resposta(conteudo_id, missao_id, resposta_aluno, resposta_certa, pontos, tipo="numero"):
-    """
-    Rótulo curto no botão: o cabeçalho "### 📍 Missão N: ..." acima já indica a missão, então o botão
-    não repete o número. O mesmo padrão é usado nos botões do Painel do Professor.
-    """
     if st.button("Verificar Resposta", key=f"btn_{conteudo_id}_{missao_id}"):
         if resposta_aluno is None or str(resposta_aluno).strip() == "":
             st.error("⚠️ Escolha uma alternativa antes de verificar!" if tipo == "multipla"
@@ -2032,10 +1964,6 @@ def renderizar_grade_cartoes(cartoes, prefixo_key):
             cor = PALETA_CORES_CARTAO[idx_global % len(PALETA_CORES_CARTAO)]
             with colunas[i]:
                 with st.container(border=True, key=f"{prefixo_key}_cartao_{idx_global}_cor_{cor}"):
-                    """
-                    Progresso na mesma linha do título, como texto simples (padrão do menu lateral,
-                    "📊 Estatística · 1/44"), para não deixar o card mais alto.
-                    """
                     titulo_linha = f"#### {cartao['icone']} {cartao['titulo']}"
                     if cartao.get("progresso"):
                         titulo_linha += f"  ·  {cartao['progresso']}"
@@ -2086,10 +2014,6 @@ def render_pagina_inicial():
         logo_html = '<div class="home-banner-logo">🎓</div>'
 
     if os.path.exists(ARQUIVO_BANNER):
-        """
-        Banner pronto (arte finalizada, com a logo embutida) tem prioridade sobre o banner gerado
-        por CSS.
-        """
         st.image(ARQUIVO_BANNER, use_container_width=True)
         st.markdown(f"##### {saudacao}")
     else:
@@ -2173,10 +2097,6 @@ def render_pagina_estatistica():
     dados = st.session_state.dados_estatistica
     s = calcular_estatisticas(dados)
 
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("A Estatística Descritiva resume um conjunto de números em poucas medidas. "
                 "Nesta teoria, vamos calcular as principais medidas desta amostra:")
     st.info("**Dados:** " + " ".join(formatar_numero(x, 1) for x in dados))
@@ -2254,10 +2174,6 @@ def render_pagina_frequencia():
     dados = st.session_state.dados_estatistica
     freq = calcular_frequencia(dados)
 
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("Veja como transformar uma lista de números soltos numa tabela de frequência — e depois num gráfico, a forma mais comum de resumir os dados de uma pesquisa por amostragem.")
 
     st.write("---")
@@ -2352,10 +2268,6 @@ def grafico_barras_eixo_controlado(categorias, valores, eixo_min, eixo_max, titu
 
 
 def render_pagina_leitura_grafica():
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("Nem todo gráfico ou pesquisa que aparece na internet, no jornal ou nas redes sociais está mostrando a informação de forma honesta. Aqui você aprende a desconfiar — e a checar — antes de acreditar numa manchete.")
 
     st.write("---")
@@ -2429,10 +2341,6 @@ def render_pagina_comparacao_diagramas():
     q = calcular_quartis(dados)
     ramos = calcular_ramo_folhas(dados)
 
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("Os mesmos dados podem ser mostrados de formas diferentes — cada forma revela um aspecto diferente da amostra. Aqui você compara três: histograma, box-plot e ramos-e-folhas.")
 
     st.write("---")
@@ -2472,10 +2380,6 @@ def render_pagina_pesquisa_amostral():
     dados = st.session_state.dados_estatistica
     s = calcular_estatisticas(dados)
 
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("Antes de calcular qualquer coisa, uma pesquisa estatística começa com DECISÕES: o que perguntar, quem ouvir, e o que fazer com a resposta. Aqui você acompanha essas decisões, usando a amostra que o professor já coletou.")
 
     st.write("---")
@@ -2537,10 +2441,6 @@ def render_pagina_tendencia():
     xs, ys = TENDENCIA_HORAS_ESTUDO, TENDENCIA_NOTAS
     reta = calcular_reta_tendencia(xs, ys)
 
-    """
-    O título da matéria e os botões Teoria/Missões são desenhados pelo roteador (bloco 10); aqui
-    entra só o conteúdo da aba Teoria.
-    """
     st.markdown("Até agora cada item tinha UM número. E se tivesse DOIS, por exemplo horas de estudo e nota? Dá pra investigar se as duas coisas andam juntas.")
 
     st.write("---")
@@ -2569,7 +2469,6 @@ def render_pagina_tendencia():
 
 
 def render_pagina_conteudo_dinamico(conteudo):
-    # Título desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões.
     if conteudo.get("descricao"):
         st.markdown(f"*{conteudo['descricao']}*")
     st.write("---")
@@ -2579,10 +2478,6 @@ def render_pagina_conteudo_dinamico(conteudo):
         st.info("📭 Este conteúdo ainda não possui teoria cadastrada. Peça ao professor para adicioná-la no Painel do Professor.")
         return
 
-    """
-    st.expander (mesmo componente do conteúdo estático) com expanded=True: abre mostrando o
-    conteúdo, e o aluno pode recolher.
-    """
     for i, secao in enumerate(secoes, start=1):
         with st.expander(f"{i}️⃣ {secao.get('titulo', '')}", expanded=True):
             st.markdown(secao.get("texto", ""))
@@ -2672,10 +2567,6 @@ def render_missoes_frequencia():
 
     st.info("**Amostra da Turma:** " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    """
-    Missões 1 a FREQ_N_FAIXAS: uma por faixa, na ordem; cada uma pede a frequência absoluta de uma
-    faixa.
-    """
     for i, f in enumerate(faixas, start=1):
         rotulo = rotulo_faixa(f)
         if prog["missao_atual"] > i:
@@ -2685,10 +2576,6 @@ def render_missoes_frequencia():
             resp = st.number_input(f"Quantos itens da amostra estão entre {rotulo}?", step=1, value=None, key=f"in_{cid}_{i}")
             verificar_resposta(cid, i, resp, f["freq"], 20)
 
-    """
-    Missão FREQ_N_FAIXAS+1: soma das frequências, que deve bater com o total da amostra (confirma
-    que nenhum item ficou de fora nem foi contado duas vezes).
-    """
     idx_total = FREQ_N_FAIXAS + 1
     if prog["missao_atual"] > idx_total:
         st.success(f"✅ Missão {idx_total} Concluída! (Total: {st.session_state.get(f'm_{cid}_{idx_total}')})")
@@ -2697,7 +2584,6 @@ def render_missoes_frequencia():
         resp = st.number_input(f"Somando a frequência das {FREQ_N_FAIXAS} faixas, quantos itens tem a amostra ao todo?", step=1, value=None, key=f"in_{cid}_{idx_total}")
         verificar_resposta(cid, idx_total, resp, freq["total"], 20)
 
-    # Missão FREQ_N_FAIXAS+2: frequência relativa (%) da faixa modal.
     idx_relativa = FREQ_N_FAIXAS + 2
     faixa_moda = freq["faixa_moda"]
     rotulo_moda = rotulo_faixa(faixa_moda)
@@ -2709,10 +2595,6 @@ def render_missoes_frequencia():
         resp = st.number_input("Qual é a frequência relativa (%) dessa faixa?", step=0.1, value=None, key=f"in_{cid}_{idx_relativa}")
         verificar_resposta(cid, idx_relativa, resp, round(faixa_moda["freq_relativa"], 1), 30)
 
-    """
-    Missão FREQ_N_FAIXAS+3 (última): liga a conta ao gráfico. É leitura visual, não cálculo, por
-    isso é múltipla escolha.
-    """
     idx_grafico = FREQ_N_FAIXAS + 3
     if prog["missao_atual"] > idx_grafico:
         st.success(f"🏆 PARABÉNS! Trilha concluída! (Faixa mais alta no gráfico: {st.session_state.get(f'm_{cid}_{idx_grafico}')})")
@@ -2840,9 +2722,6 @@ def render_missoes_comparacao_diagramas():
 
     st.info("**Amostra da Turma:** " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    """
-    Missões 1-3: os três números que formam o box-plot, um de cada vez.
-    """
     if prog["missao_atual"] > 1: st.success(f"✅ Missão 1 Concluída! (Mediana: {st.session_state.get(f'm_{cid}_1')})")
     elif prog["missao_atual"] == 1:
         st.markdown('### 📍 Missão 1: O Centro (Mediana)')
@@ -2863,10 +2742,6 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input("Qual é o Q3?", step=0.1, value=None, key=f"in_{cid}_3")
         verificar_resposta(cid, 3, resp, q["q3"], 30)
 
-    """
-    Missão 4: com os 3 números calculados, mostra o box-plot e pede para ler o Q3 nele, ligando a
-    conta ao gráfico.
-    """
     if prog["missao_atual"] == 4:
         grafico_boxplot_manual(q)
     if prog["missao_atual"] > 4: st.success(f"✅ Missão 4 Concluída! (Q3 no gráfico: {st.session_state.get(f'm_{cid}_4')})")
@@ -2875,10 +2750,6 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input("Olhando o box-plot acima, qual valor marca o TOPO da caixa (Q3)?", step=0.1, value=None, key=f"in_{cid}_4")
         verificar_resposta(cid, 4, resp, q["q3"], 20)
 
-    """
-    Missão 5: ramos e folhas; conta quantos valores caem no ramo mais frequente (em empate, vale o
-    primeiro ramo, mesmo critério da faixa modal da Frequência).
-    """
     ramo_mais_comum = max(ramos, key=lambda r: len(ramos[r]))
     if prog["missao_atual"] == 5:
         st.code(texto_ramo_folhas(ramos), language=None)
@@ -2888,10 +2759,6 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input(f"No diagrama acima, quantos valores tem o ramo {ramo_mais_comum}?", step=1, value=None, key=f"in_{cid}_5")
         verificar_resposta(cid, 5, resp, len(ramos[ramo_mais_comum]), 20)
 
-    """
-    Missão 6 (última): compara os três diagramas, trabalhando o "reconhecer o mais eficiente para
-    cada análise" da habilidade EM13MAT409.
-    """
     if prog["missao_atual"] > 6:
         st.success("🏆 PARABÉNS! Trilha concluída!")
     elif prog["missao_atual"] == 6:
@@ -2912,10 +2779,6 @@ def render_missoes_pesquisa_amostral():
 
     st.info(f"**Cenário:** você quer saber a nota média de Matemática de todos os alunos do Ensino Médio da escola, usando a amostra que o professor já coletou: " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    """
-    Missões 1-2: distinguir população de amostra no cenário dado; decisão conceitual, por isso
-    múltipla escolha.
-    """
     if prog["missao_atual"] > 1: st.success(f"✅ Missão 1 Concluída! (Resposta: {st.session_state.get(f'm_{cid}_1')})")
     elif prog["missao_atual"] == 1:
         st.markdown('### 📍 Missão 1: Qual é a População?')
@@ -2936,16 +2799,12 @@ def render_missoes_pesquisa_amostral():
         )
         verificar_resposta(cid, 2, resp, "Só a sua turma", 20, tipo="multipla")
 
-    """
-    Missão 3: confirma o tamanho real da amostra, a única missão numérica do conteúdo.
-    """
     if prog["missao_atual"] > 3: st.success(f"✅ Missão 3 Concluída! (Tamanho da amostra: {st.session_state.get(f'm_{cid}_3')})")
     elif prog["missao_atual"] == 3:
         st.markdown('### 📍 Missão 3: O Tamanho da Amostra')
         resp = st.number_input("Quantos valores tem essa amostra?", step=1, value=None, key=f"in_{cid}_3")
         verificar_resposta(cid, 3, resp, s["n"], 20)
 
-    # Missão 4: reconhecer o que é uma boa pergunta de pesquisa.
     if prog["missao_atual"] > 4: st.success(f"✅ Missão 4 Concluída! (Resposta: {st.session_state.get(f'm_{cid}_4')})")
     elif prog["missao_atual"] == 4:
         st.markdown('### 📍 Missão 4: Uma Boa Pergunta de Pesquisa')
@@ -2956,10 +2815,6 @@ def render_missoes_pesquisa_amostral():
         )
         verificar_resposta(cid, 4, resp, "Qual é a nota média da turma em Matemática?", 20, tipo="multipla")
 
-    """
-    Missões 5-6: separar tendência central de dispersão, conteúdo do relatório que a habilidade
-    pede.
-    """
     if prog["missao_atual"] > 5: st.success(f"✅ Missão 5 Concluída! (Resposta: {st.session_state.get(f'm_{cid}_5')})")
     elif prog["missao_atual"] == 5:
         st.markdown('### 📍 Missão 5: Tendência Central')
@@ -3156,11 +3011,6 @@ LARGURA_ROTULO_CABECALHO_PDF = 32  # mm — cabe "Professor(a):" em negrito 10pt
 
 
 def _linha_dado_pdf(pdf, rotulo, valor):
-    """
-    Uma linha 'Rótulo: valor' alinhada à esquerda, com rótulo em negrito de largura fixa para os
-    valores alinharem na mesma coluna (formato de documentos curtos: Acadêmico / Curso / Disciplina
-    / Professor / Data).
-    """
     pdf.set_font("CMU", 'B', 10)
     pdf.cell(LARGURA_ROTULO_CABECALHO_PDF, 6, text=f"{rotulo}:", align='L')
     pdf.set_font("CMU", '', 10)
@@ -3239,7 +3089,6 @@ def _grafico_barras_pdf(pdf, titulo, itens, x_tabela, largura_tabela):
 
 @st.cache_data
 def nome_de_arquivo(texto):
-    """'Estatística Descritiva' -> 'estatistica_descritiva' (sem acento nem símbolo)."""
     sem_acento = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", "_", sem_acento.lower()).strip("_") or "conteudo"
 
@@ -3267,10 +3116,6 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
 
     largura_util = pdf.w - pdf.l_margin - pdf.r_margin  # 170mm em A4 com margens de 20mm
 
-    """
-    --- Dados do relatório (Instituição/Professor/Turma opcionais, Data sempre) ---
-    Rótulo em negrito + dois pontos, alinhado à esquerda (formato de documentos curtos).
-    """
     if nome_instituicao:
         _linha_dado_pdf(pdf, "Instituição", nome_instituicao)
     if nome_professor:
@@ -3281,7 +3126,6 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
     _linha_dado_pdf(pdf, "Data", data_relatorio)
     pdf.ln(3)
 
-    # --- Título centralizado ---
     pdf.set_font("CMU", 'B', 16)
     pdf.cell(largura_util, 10, text="Relatório de Desempenho - Trilha de Aprendizagem", align='C', new_x="LMARGIN", new_y="NEXT")
     pdf.ln(4)
@@ -3335,18 +3179,12 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
 
     pdf.ln(6)
 
-    # --- Gráfico de barras: XP por aluno (ver _grafico_barras_pdf: regras de página) ---
     grafico_xp_isolado = False
     if lista_geral:
         maior_xp = max((linha["XP Total"] for linha in lista_geral), default=0) or 1
         itens_xp = [(l["Aluno"], l["XP Total"] / maior_xp, str(l["XP Total"]), l.get("Cor", "#ff4b4b")) for l in lista_geral]
         grafico_xp_isolado = _grafico_barras_pdf(pdf, "Gráfico de XP por Aluno", itens_xp, x_tabela1, largura_tabela1)
 
-    """
-    --- Tabela de habilidades da BNCC (só se houver missão mapeada) ---
-    Fica logo depois do Desempenho da Turma, na primeira página quando cabe: responde "o que a turma
-    aprendeu", enquanto as outras respondem "quanto cada aluno fez".
-    """
     if linhas_bncc:
         if grafico_xp_isolado:
             pdf.add_page()
@@ -3371,10 +3209,6 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
             pdf.cell(40, 9, text=f'{linha["Conclusões"]}/{linha["Possíveis"]}', border=1, align='C')
             pdf.cell(40, 9, text=f'{linha["% Concluído"]}%', border=1, align='C', new_x="LMARGIN", new_y="NEXT")
 
-    """
-    --- Acerto por aluno em cada habilidade (igual à tabela da Visão Geral) ---
-    Em blocos de 5 habilidades por tabela, para caber na largura da página.
-    """
     if acerto and acerto[0]:
         habilidades_ac, linhas_ac = acerto
         pdf.add_page()
@@ -3430,11 +3264,6 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
     """
     pdf.add_page()
 
-    """
-    --- Tabela 2: Detalhamento do conteúdo em tela ---
-    Mesma regra da tabela 1: com nome, vai de margem a margem (170mm), dando 68mm ao nome completo;
-    sem nome, 150mm centralizados.
-    """
     largura_tabela2 = largura_util if usar_nome_relatorio else 150  # 38+68+26+20+18 | 50+30+40+30
     x_tabela2 = pdf.l_margin + (largura_util - largura_tabela2) / 2
     pdf.set_font("CMU", 'B', 13)
@@ -3475,7 +3304,6 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
 
     pdf.ln(6)
 
-    # --- Gráfico de barras: % concluído nesse conteúdo, por aluno (escala 0-100) ---
     if linhas_conteudo:
         itens_pct = []
         for linha in linhas_conteudo:
@@ -3491,10 +3319,6 @@ CORES_DESEMPENHO = ["#2ecc71", "#f1c40f", "#e74c3c"]  # verde, amarelo, vermelho
 
 
 def cor_por_percentual_concluido(percentual):
-    """
-    Verde (>=70%), amarelo (40-69%) ou vermelho (<40%): mostra de longe quem está bem, mediano ou
-    precisando de atenção em um conteúdo.
-    """
     verde, amarelo, vermelho = CORES_DESEMPENHO
     if percentual >= 70:
         return verde
@@ -3544,9 +3368,6 @@ ESTILO_LINHA_TURMA = "background-color: #f1f3f5; color: #1f3a6e; font-weight: bo
 
 
 def _fundo_acerto(percentual):
-    """Fundo suave da célula (mesmas faixas do resto do painel: >=70 verde, 40-69
-    amarelo, <40 vermelho), claro o bastante para o texto escuro ler bem nos
-    dois temas."""
     if percentual >= 70:
         return "background-color: #c9f0d6; color: #1f2937"
     if percentual >= 40:
@@ -3576,14 +3397,12 @@ def tabela_de_acerto(alunos, conteudo_id=None):
 
 
 def _percentual_acerto(par):
-    """Porcentagem de acerto de um [acertos, tentativas], ou None se não houve tentativa."""
     if not par or not par[1]:
         return None
     return round(par[0] / par[1] * 100)
 
 
 def _texto_acerto(par):
-    """Texto da célula: '62% (24/39)', ou '—' sem tentativa."""
     pct = _percentual_acerto(par)
     return "—" if pct is None else f"{pct}% ({par[0]}/{par[1]})"
 
@@ -3608,17 +3427,9 @@ def renderizar_acerto_por_aluno_e_habilidade(alunos, conteudo_id=None):
         pcts = [_percentual_acerto(par) for par in pares]
         linhas_txt.append([("👥 " if rotulo == "Turma" else "") + rotulo] + [_texto_acerto(par) for par in pares])
         if rotulo == "Turma":
-            """
-            A linha da turma tem cor própria (fundo cinza, texto azul escuro, sem
-            verde/amarelo/vermelho), pra não ser confundida com um aluno.
-            """
             linhas_css.append([ESTILO_LINHA_TURMA] * (len(pcts) + 1))
         else:
             linhas_css.append([""] + [_fundo_acerto(p) if p is not None else "" for p in pcts])
-    """
-    Título de cada coluna com o total de missões da habilidade, pra dar a medida do
-    "(acertos/tentativas)".
-    """
     total_missoes = {l["Habilidade"]: l["Missões"] for l in desempenho_por_bncc(alunos, conteudo_id)}
     titulos = [f"{h}" + chr(10) + f"({total_missoes[h]} missões)" if h in total_missoes else h for h in habilidades]
     df_txt = pd.DataFrame(linhas_txt, columns=["Aluno"] + titulos)
@@ -3634,10 +3445,6 @@ def _desmarcar_tabela_alunos():
 
 @st.dialog("🗑️ Excluir aluno")
 def _dialog_confirmar_exclusao_alunos(nomes_alvo):
-    """
-    Popup modal (st.dialog) em vez de um aviso mais abaixo na página, que obrigaria a rolar para
-    encontrá-lo.
-    """
     if len(nomes_alvo) == 1:
         st.warning(f"⚠️ Tem certeza que deseja excluir **{nomes_alvo[0]}** e todo o progresso dele(a)? Essa ação não pode ser desfeita.")
     else:
@@ -3667,7 +3474,6 @@ def _dialog_confirmar_apagar_banco():
 
 
 def renderizar_desempenho_por_habilidade(alunos, conteudo_id=None):
-    """Tabela e gráfico de conclusão por habilidade da BNCC (da turma toda, ou de um conteúdo)."""
     st.subheader("🎯 Desempenho por Habilidade da BNCC")
     linhas_bncc = desempenho_por_bncc(alunos, conteudo_id)
     if not linhas_bncc:
@@ -3717,10 +3523,6 @@ def render_desempenho_turma():
         st.info("Nenhum aluno iniciou a trilha ainda.")
         return
 
-    """
-    Meta de XP definida pelo professor em Configurações; sem valor salvo, usa metade do catálogo
-    atual como ponto de partida.
-    """
     _, _, xp_catalogo_total = xp_maximo_catalogo_atual()
     meta_xp = st.session_state.config.get("meta_xp") or (xp_catalogo_total / 2)
 
@@ -3760,10 +3562,6 @@ def render_desempenho_turma():
             colunas_visiveis = ["Aluno", "XP Total", "Erros Totais"]
             if df_geral["Nome no Relatório"].str.strip().any():
                 colunas_visiveis.insert(1, "Nome no Relatório")
-            """
-            Tabela em HTML (título em negrito, como as outras). A exclusão é feita por uma lista de
-            nomes logo acima da tabela.
-            """
             tabela_centralizada(df_geral[colunas_visiveis])
             with espaco_botao_excluir:
                 col_nomes, col_botao = st.columns([4, 1], vertical_alignment="bottom")
@@ -3820,7 +3618,6 @@ def render_desempenho_turma():
                     x=alt.X("XP Total:Q"),
                     y=alt.Y("Aluno:N", sort=None),
                     color=alt.Color("Cor:N", scale=alt.Scale(domain=CORES_DESEMPENHO, range=CORES_DESEMPENHO), legend=None),
-                    # Tooltip explícito: evita mostrar "Cor" e "_Cor_sort_index" (campo interno do Vega-Lite).
                     tooltip=[alt.Tooltip("Aluno:N", title="Aluno"), alt.Tooltip("XP Total:Q", title="XP Total")],
                 )
             )
@@ -3841,10 +3638,6 @@ def render_desempenho_turma():
             linhas = []
             for nome, perfil in alunos.items():
                 prog = perfil.get("progresso", {}).get(cid, {"missao_atual": 1, "erros": 0})
-                """
-                missao_atual aponta para a próxima missão (começa em 1); "concluídas" é missao_atual
-                - 1, limitado ao total.
-                """
                 concluidas = max(prog["missao_atual"] - 1, 0)
                 concluidas = min(concluidas, total) if total else concluidas
                 linhas.append({"Aluno": nome, "Nome no Relatório": perfil.get("nome_relatorio", ""),
@@ -3873,7 +3666,6 @@ def render_desempenho_turma():
                         x=alt.X("% Concluído:Q"),
                         y=alt.Y("Aluno:N", sort=None),
                         color=alt.Color("Cor:N", scale=alt.Scale(domain=CORES_DESEMPENHO, range=CORES_DESEMPENHO), legend=None),
-                        # Tooltip explícito: evita mostrar "Cor" e "_Cor_sort_index" (campo interno do Vega-Lite).
                         tooltip=[alt.Tooltip("Aluno:N", title="Aluno"), alt.Tooltip("% Concluído:Q", title="% Concluído")],
                     )
                 )
@@ -3890,7 +3682,6 @@ def render_desempenho_turma():
                 nome_professor=st.session_state.config.get("nome_professor", ""),
                 turma=st.session_state.config.get("turma", ""),
                 data_relatorio=formatar_data_relatorio(st.session_state.config.get("cidade", "")),
-                # Habilidades e acerto só deste conteúdo: o PDF sai da aba e fala dela.
                 linhas_bncc=desempenho_por_bncc(alunos, cid),
                 acerto=tabela_de_acerto(alunos, cid),
             )
@@ -3976,10 +3767,6 @@ def render_gerenciar_conteudos():
             except ValueError:
                 st.error("⚠️ Formato inválido! Digite apenas números separados por espaço.")
 
-    """
-    Dois subtítulos, um por grupo ("Matéria Padrão" / "Matérias Cadastradas"), no mesmo vocabulário
-    da barra lateral. Um título único não faria sentido para os nativos, que ninguém cadastrou.
-    """
     nativos_em_ordem = [k for k, v in st.session_state.conteudos.items() if v["tipo"] == "estatico"]
     dinamicos_em_ordem = [k for k, v in st.session_state.conteudos.items() if v["tipo"] != "estatico"]
 
@@ -4023,28 +3810,15 @@ def render_gerenciar_conteudos():
 
             badges = []
             if c["tipo"] == "estatico":
-                """
-                "Padrão", e não "Nativo do sistema": a seção acima já se chama "Matéria Padrão", e
-                usar um só termo evita confusão.
-                """
                 badges.append('<span class="badge-conteudo badge-conteudo-tipo">⚙️ Conteúdo Padrão</span>')
             else:
                 n_missoes = len(c.get("missoes", []))
                 badges.append(f'<span class="badge-conteudo badge-conteudo-tipo">🧩 {n_missoes} missão(ões)</span>')
-            """
-            Total de XP do conteúdo (acertando tudo de primeira): evita abrir cada missão e somar o
-            XP na mão (varia entre 10 e 80 por missão).
-            """
             badges.append(f'<span class="badge-conteudo badge-conteudo-tipo">💯 Total {xp_maximo_de_conteudo(cid, c)} XP</span>')
             habilidades = habilidades_bncc_do_conteudo(cid, c)
             if habilidades:
                 badges.append(f'<span class="badge-conteudo badge-conteudo-bncc">🎯 BNCC: {", ".join(habilidades)}</span>')
             st.markdown(" ".join(badges), unsafe_allow_html=True)
-            """
-            Legenda de cada habilidade (código + começo da descrição oficial), para o professor não
-            precisar decorar os códigos da BNCC. Só as que têm descrição no banco; o código das
-            demais já aparece no selo acima.
-            """
             com_descricao = [h for h in habilidades if descricao_curta_bncc(h)]
             for hab in com_descricao:
                 st.caption(f"🎯 **{hab}** · {descricao_curta_bncc(hab, limite=170)}")
@@ -4062,10 +3836,6 @@ def render_gerenciar_conteudos():
     st.markdown('<div id="ancora-form-conteudo"></div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    """
-    O formulário (criar ou editar) só aparece quando pedido: "Editar" o abre sozinho e, para criar
-    do zero, usa-se o botão. Assim "Cancelar" faz a caixa inteira sumir.
-    """
     if not st.session_state.mostrar_form_conteudo:
         if st.button("➕ Criar Novo Conteúdo"):
             st.session_state.mostrar_form_conteudo = True
@@ -4166,7 +3936,6 @@ def render_gerenciar_conteudos():
                         f"Pontos (XP) {i + 1}", min_value=1, value=int(missao.get("pontos", 10)),
                         step=1, key=f"edit_pontos_missao_{i}",
                     ))
-                # Fora de st.form, então aqui dá pra mostrar o campo só quando o tipo escolhido é múltipla escolha.
                 if missao["tipo"] == "multipla":
                     texto_alts = st.text_area(
                         f"Alternativas {i + 1} — uma por linha",
@@ -4183,10 +3952,6 @@ def render_gerenciar_conteudos():
                             "não está entre as alternativas. O aluno não teria como acertar."
                         )
                 elif "alternativas" in missao:
-                    """
-                    Trocou de múltipla escolha para outro tipo: as alternativas antigas não valem
-                    mais e não devem ir para o conteudos.json.
-                    """
                     del missao["alternativas"]
                 missao["bncc"] = campo_habilidade_bncc(
                     f"Habilidade BNCC {i + 1} (opcional)", valor_atual=missao.get("bncc", ""),
@@ -4278,11 +4043,6 @@ def render_gerenciar_conteudos():
         for campo in ("novo_titulo_conteudo", "novo_icone_conteudo", "nova_descricao_conteudo"):
             st.session_state.pop(campo, None)
 
-    """
-    Colunas estreitas (e não st.columns(2), que divide ao meio): o formulário ocupa a página
-    inteira, então com 50/50 o Cancelar ficaria longe do Salvar. Os dois ficam juntos, perto da ação
-    principal.
-    """
     col_salvar, col_cancelar, _ = st.columns([1, 1, 4])
     with col_salvar:
         if st.button("💾 Salvar", type="primary", key="salvar_conteudo_btn"):
@@ -4350,11 +4110,6 @@ def render_configuracoes():
         "abaixo de 40% fica vermelho."
     )
     xp_nativo_hoje, xp_cadastrado_hoje, xp_catalogo_hoje = xp_maximo_catalogo_atual()
-    """
-    Dois números separados, não um total misturado: sem separar Matéria Padrão de Matérias
-    Cadastradas, não dá para saber quanto vem de cada grupo. Cards com cor suave (ver
-    .resumo-xp-card no CSS) em vez de st.metric() puro.
-    """
     col_xp_nativo, col_xp_cadastrado, col_xp_total = st.columns(3)
     with col_xp_nativo:
         st.markdown(
@@ -4484,10 +4239,6 @@ que logar/deslogar não empurre o menu: o Streamlit desenha de cima para baixo, 
 condicional acima da navegação move tudo que vem depois.
 """
 with st.sidebar:
-    """
-    Botão "🏠 Início" no topo, acima da logo. A logo/título logo abaixo também leva à Início: dois
-    caminhos para o mesmo destino.
-    """
     if st.button("🏠  Início", key="nav_inicio", use_container_width=True,
                  type="primary" if st.session_state.pagina == PAGINA_INICIO else "secondary"):
         st.session_state.pagina = PAGINA_INICIO
@@ -4550,10 +4301,6 @@ with st.sidebar:
     """
     st.markdown('<hr class="sidebar-divisor-identidade">', unsafe_allow_html=True)
 
-    """
-    --- Nível 2: as matérias. Clicar abre a matéria. O progresso vai no próprio rótulo, então o menu
-    mostra onde o aluno parou em cada matéria sem blocos extras que cresçam ou encolham. ---
-    """
     concluidas_por_conteudo = progresso_resumo_aluno()
 
     """
@@ -4579,10 +4326,6 @@ with st.sidebar:
                  type="primary" if ativo_hub else "secondary"):
         ir_para_hub_estatistica()
 
-    """
-    Fica em branco se o professor ainda não cadastrou nada (o for abaixo não desenha botões); só o
-    rótulo aparece.
-    """
     st.markdown('<div class="sidebar-secao sidebar-secao-espacada">Matérias Cadastradas</div>', unsafe_allow_html=True)
 
     for cid, conteudo_info in st.session_state.conteudos.items():
@@ -4598,10 +4341,6 @@ with st.sidebar:
                      type="primary" if ativo else "secondary"):
             ir_para_materia(cid)
 
-    """
-    Mesma classe da linha entre Acessar e Matéria Padrão: o <hr> padrão do Streamlit não deixa
-    espaço igual dos dois lados.
-    """
     st.markdown('<hr class="sidebar-divisor-professor">', unsafe_allow_html=True)
 
     """
@@ -4616,10 +4355,6 @@ with st.sidebar:
         st.session_state.pagina = PAGINA_PROFESSOR
         st.rerun()
 
-    """
-    Botão da pesquisa (formulário externo): só aparece se o professor informou o endereço em
-    Configurações. Abre em outra aba.
-    """
     url_pesquisa = st.session_state.config.get("url_pesquisa", "")
     if url_pesquisa:
         st.markdown('<hr class="sidebar-divisor-professor">', unsafe_allow_html=True)
@@ -4641,10 +4376,6 @@ elif pagina == PAGINA_ESTATISTICA_HUB:
     render_pagina_estatistica_hub()
 
 elif pagina == PAGINA_MATERIA:
-    """
-    Se o professor excluiu a matéria que estava aberta, cai no conteúdo nativo em vez de gerar
-    KeyError.
-    """
     if st.session_state.conteudo_ativo not in st.session_state.conteudos:
         st.session_state.conteudo_ativo = ID_CONTEUDO_ESTATISTICA
     cid = st.session_state.conteudo_ativo
