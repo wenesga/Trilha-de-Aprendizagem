@@ -76,6 +76,20 @@ python -m venv .venv
 
 ---
 
+## 🧱 ESTRUTURA DO CÓDIGO
+
+- `trilha_aprendizagem.py`: arquivo principal. Define a página (`st.set_page_config`), chama a inicialização e roteia as páginas. Não tem lógica própria.
+- `config.py`: constantes, caminhos de arquivos, identificadores de páginas e de conteúdos nativos.
+- `banco.py`: banco SQLite (alunos, progresso, tentativas, acessos) e consultas.
+- `sessao.py`: estado da sessão, login do aluno e do professor, mensagens rápidas.
+- `conteudos.py` e `configuracao.py`: leitura e gravação de `conteudos.json` e `config_sistema.json`.
+- `bncc.py`: habilidades da BNCC (lista, descrições e desempenho por habilidade).
+- `estatistica.py`: cálculos do conteúdo nativo de Estatística. `graficos.py`: gráficos Altair.
+- `missoes.py`: verificação de respostas e cálculo de XP.
+- `estilo.py`: CSS da aplicação. `injecoes.py`: JavaScript e manifest do app instalado.
+- `desempenho.py` e `relatorio_pdf.py`: faixas de cor/texto de desempenho e geração do relatório em PDF.
+- `paginas/`: `inicio.py`, `teoria.py`, `trilha_missoes.py`, `materia.py`, `menu.py` e o Painel do Professor (`professor.py`, `professor_visao.py`, `professor_conteudos.py`, `professor_config.py`).
+
 ## 🙌 AUTORIA
 
 Desenvolvido por **Wenes Gomes Aquino** no TCC de Licenciatura em Computação (UFT/UAB):

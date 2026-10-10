@@ -10,7 +10,8 @@ RUN f=$(python -c "import streamlit,os;print(os.path.join(os.path.dirname(stream
  && sed -i 's|<title>Streamlit</title>|<title>Trilha de Aprendizagem</title><meta name="description" content="Gamificação no ensino de Estatística" /><meta property="og:type" content="website" /><meta property="og:title" content="Trilha de Aprendizagem" /><meta property="og:description" content="Gamificação no ensino de Estatística" /><meta property="og:image" content="https://trilhaestatistica.com.br/app/static/previa.png" /><meta property="og:image:width" content="600" /><meta property="og:image:height" content="600" />|' "$f" \
  && grep -q "og:title" "$f"
 
-COPY trilha_aprendizagem.py habilidades_bncc.json ./
+COPY *.py habilidades_bncc.json ./
+COPY paginas ./paginas
 COPY .streamlit ./.streamlit
 COPY fonts ./fonts
 COPY imagens ./imagens
