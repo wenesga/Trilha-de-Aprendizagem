@@ -21,27 +21,16 @@ from fpdf import FPDF
 from PIL import Image  # só pra ler a proporção do cabecalho.png (ver _PDFComCabecalho)
 
 
-# Ancora o diretório de trabalho na pasta deste arquivo. Sem isso, todos os
-# caminhos relativos (logo.png, banner.png, banco_alunos.json, etc.) só
-# funcionam se quem rodar o script já estiver "dentro" desta pasta no
-# terminal — o botão Play do VS Code, por exemplo, nem sempre garante isso.
+# Ancora o diretório de trabalho na pasta deste arquivo. Sem isso, todos os caminhos relativos (logo.png, banner.png, banco_alunos.json, etc.) só funcionam se quem rodar o script já estiver "dentro" desta pasta no terminal — o botão Play do VS Code, por exemplo, nem sempre garante isso.
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 # ==========================================
 # 1. CONFIGURAÇÃO E ARQUIVOS DE MEMÓRIA
 # ==========================================
-# As artes ficam aqui em cima, e não junto dos outros ARQUIVO_* mais abaixo,
-# porque st.set_page_config() precisa do caminho da logo e tem que ser a
-# PRIMEIRA chamada st.* do script — não dá pra declarar depois. Antes o caminho
-# estava repetido literalmente dentro do set_page_config; quando as imagens
-# foram pra pasta imagens/, essa cópia esquecida faria o ícone da aba cair no
-# fallback 🎓 silenciosamente, sem erro nenhum. Uma constante só evita isso.
+# As artes ficam aqui em cima, e não junto dos outros ARQUIVO_* mais abaixo, porque st.set_page_config() precisa do caminho da logo e tem que ser a PRIMEIRA chamada st.* do script — não dá pra declarar depois. Antes o caminho estava repetido literalmente dentro do set_page_config; quando as imagens foram pra pasta imagens/, essa cópia esquecida faria o ícone da aba cair no fallback 🎓 silenciosamente, sem erro nenhum. Uma constante só evita isso.
 #
-# imagens/ é para as artes do projeto (como fonts/ é para as fontes). Não
-# confundir com static/, que é funcional: o Streamlit serve aquela pasta em
-# app/static/ (enableStaticServing no .streamlit/config.toml) e o manifest e os
-# ícones do PWA dependem daquele caminho literal — não mover.
+# imagens/ é para as artes do projeto (como fonts/ é para as fontes). Não confundir com static/, que é funcional: o Streamlit serve aquela pasta em app/static/ (enableStaticServing no .streamlit/config.toml) e o manifest e os ícones do PWA dependem daquele caminho literal — não mover.
 ARQUIVO_LOGO = "static/logo.svg"                 # opcional: marca quadrada do projeto em vetor, um arquivo só para barra lateral, ícone da aba e ícone do app instalado (por isso fica em static/, que o manifest alcança por URL)
 ARQUIVO_BANNER = "imagens/banner.svg"            # opcional: arte pronta para o topo da Página Inicial (ideal 1200x400px ou 1500x500px, formato "capa" tipo Facebook/Twitter — pode já vir com a logo embutida, feita no Photoshop)
 ARQUIVO_CABECALHO = "imagens/cabecalho.png"      # opcional: timbre institucional no topo de toda página do relatório em PDF. Tem que ser PNG (o fpdf2 não embute PDF); exportar com ~2008px de largura = 300 DPI nos 170mm da página. A altura é livre, o código lê a proporção do arquivo
@@ -164,7 +153,7 @@ def _injetar_aviso_saida():
     """Aviso nativo do navegador ('Sair do site? Alterações podem não ser
     salvas') antes de fechar a aba, atualizar ou navegar pra fora.
 
-    Esse app é uma SPA (single page application, ver conversa de 2026-09-03):
+    Esse app é uma SPA (single page application):
     tudo acontece dentro de uma única página carregada, trocando de conteúdo
     via WebSocket — nunca existe uma "página anterior" de verdade. Por isso
     o botão Voltar do navegador não tem pra onde voltar dentro do app, e sai
@@ -240,9 +229,8 @@ _injetar_liberar_scroll_grafico()
 
 def _injetar_clique_logo_inicio():
     """Faz a LOGO (imagem) também levar pra Início ao clicar, não só o texto
-    "Trilha de Aprendizagem" ao lado — pedido do Wenes (2026-09-13): pra ele
-    logo+título são "um objeto só" (é assim que funciona em praticamente todo
-    site/app), então clicar em qualquer parte tem que navegar.
+    "Trilha de Aprendizagem" ao lado: logo e título formam um único elemento
+    visual, então clicar em qualquer parte tem que navegar.
 
     st.image() não tem on_click nem aceita link. A solução é ouvir clique em
     qualquer lugar dentro do cabeçalho (".st-key-sidebar_cabecalho") e, se não
@@ -272,10 +260,7 @@ def _injetar_clique_logo_inicio():
 
 _injetar_clique_logo_inicio()
 
-# Pasta dos dados que mudam durante o uso (banco de alunos, conteúdos, configuração).
-# Localmente é a própria pasta do projeto. Na hospedagem (Fly.io) aponta para o
-# volume de disco persistente, via variável TRILHA_DIR_DADOS=/data — só o volume
-# sobrevive a reinícios; o resto do disco do servidor é refeito a cada publicação.
+# Pasta dos dados que mudam durante o uso (banco de alunos, conteúdos, configuração). Localmente é a própria pasta do projeto. Na hospedagem (Fly.io) aponta para o volume de disco persistente, via variável TRILHA_DIR_DADOS=/data — só o volume sobrevive a reinícios; o resto do disco do servidor é refeito a cada publicação.
 DIR_DADOS = os.environ.get("TRILHA_DIR_DADOS", ".")
 os.makedirs(DIR_DADOS, exist_ok=True)
 
@@ -284,16 +269,12 @@ ARQUIVO_ALUNOS = os.path.join(DIR_DADOS, "banco_alunos.json")             # form
 ARQUIVO_ALUNOS_DB = os.path.join(DIR_DADOS, "banco_alunos.db")            # progresso dos alunos (SQLite — suporta vários alunos salvando ao mesmo tempo sem corromper dados)
 ARQUIVO_CONTEUDOS = os.path.join(DIR_DADOS, "conteudos.json")             # conteúdos cadastrados (nativos + criados pelo professor)
 ARQUIVO_CONFIG = os.path.join(DIR_DADOS, "config_sistema.json")           # configurações gerais (senha do professor)
-                                                 # ARQUIVO_LOGO / ARQUIVO_BANNER / ARQUIVO_CABECALHO ficam lá no topo do
-                                                 # arquivo, antes do st.set_page_config() — ver o comentário de lá.
+                                                 # ARQUIVO_LOGO / ARQUIVO_BANNER / ARQUIVO_CABECALHO ficam lá no topo do arquivo, antes do st.set_page_config() — ver o comentário de lá.
 
-# Senha inicial do Painel do Professor.
-# O professor pode (e deve) trocá-la dentro do próprio painel, em "⚙️ Configurações".
+# Senha inicial do Painel do Professor. O professor pode (e deve) trocá-la dentro do próprio painel, em "⚙️ Configurações".
 SENHA_PADRAO_PROFESSOR = "123"
 
-# Paleta de cores suaves pra destacar os cartões de "Conteúdos disponíveis" do
-# fundo (funciona em tema claro e escuro — ver CSS ".cartao-cor-*" mais abaixo).
-# Cicla nessa ordem conforme novos conteúdos são cadastrados.
+# Paleta de cores suaves pra destacar os cartões de "Conteúdos disponíveis" do fundo (funciona em tema claro e escuro — ver CSS ".cartao-cor-*" mais abaixo). Cicla nessa ordem conforme novos conteúdos são cadastrados.
 PALETA_CORES_CARTAO = ["azul", "roxo", "rosa", "amarelo", "verde", "ciano"]
 
 ID_CONTEUDO_ESTATISTICA = "estatistica"                    # id fixo do conteúdo nativo do sistema
@@ -303,46 +284,21 @@ ID_CONTEUDO_COMPARACAO = "estatistica_comparacao_diagramas"  # id fixo do 4º co
 ID_CONTEUDO_PESQUISA_AMOSTRAL = "estatistica_pesquisa_amostral"  # id fixo do 5º conteúdo nativo (EM13MAT202, decisões de planejamento)
 ID_CONTEUDO_TENDENCIA = "estatistica_tendencia"  # id fixo do 6º conteúdo nativo (EM13MAT510, cenário próprio — não usa dados_estatistica)
 
-# Os 3 conteúdos nativos de Estatística aparecem pro aluno como UM item só
-# ("📊 Estatística", ver PAGINA_ESTATISTICA_HUB) em vez de 3 itens soltos no
-# menu/Início — 3 itens diluíam a identidade de Estatística no meio das
-# outras matérias, exatamente o problema que o orientador apontou (pedido de
-# 2026-09-11: reforçar o foco original em Estatística). Cada um continua
-# sendo seu próprio conteúdo (progresso, XP e BNCC separados) — a mudança é
-# só de navegação/vitrine, não de dado.
+# Os 3 conteúdos nativos de Estatística aparecem pro aluno como UM item só ("📊 Estatística", ver PAGINA_ESTATISTICA_HUB) em vez de 3 itens soltos no menu/Início, agrupando o tema em um único ponto de entrada. Cada um continua sendo seu próprio conteúdo (progresso, XP e BNCC separados) — a mudança é só de navegação/vitrine, não de dado.
 IDS_ESTATISTICA_HUB = [ID_CONTEUDO_ESTATISTICA, ID_CONTEUDO_FREQUENCIA, ID_CONTEUDO_LEITURA_GRAFICA, ID_CONTEUDO_COMPARACAO, ID_CONTEUDO_PESQUISA_AMOSTRAL, ID_CONTEUDO_TENDENCIA]
 
-# Número de faixas da tabela de frequência do conteúdo nativo acima. As faixas
-# são calculadas a partir do menor e maior valor REAL de cada vez (não fixas em
-# "0 a 10"), pra funcionar com qualquer amostra que o professor cadastrar em
-# "Editar dados numéricos" — nota, idade, altura — igual ao resto da
-# Estatística (ver calcular_frequencia).
+# Número de faixas da tabela de frequência do conteúdo nativo acima. As faixas são calculadas a partir do menor e maior valor REAL de cada vez (não fixas em "0 a 10"), pra funcionar com qualquer amostra que o professor cadastrar em "Editar dados numéricos" — nota, idade, altura — igual ao resto da Estatística (ver calcular_frequencia).
 FREQ_N_FAIXAS = 5
 
-# Largura fixa (px) dos gráficos de barra do conteúdo de Estatística (Frequência
-# e Leitura Crítica). Sem isso, use_container_width deixa o gráfico esticado até
-# a largura inteira da coluna — exagerado pra um gráfico de só 2 a 5 barras,
-# e sem nenhum motivo (o relatório em PDF também usa tabela estreita e
-# centralizada, não esticada de ponta a ponta, pelo mesmo motivo).
+# Largura fixa (px) dos gráficos de barra do conteúdo de Estatística (Frequência e Leitura Crítica). Sem isso, use_container_width deixa o gráfico esticado até a largura inteira da coluna — exagerado pra um gráfico de só 2 a 5 barras, e sem nenhum motivo (o relatório em PDF também usa tabela estreita e centralizada, não esticada de ponta a ponta, pelo mesmo motivo).
 LARGURA_GRAFICO = 380
 
-# Cenário fixo do Caso 1 (eixo cortado) do conteúdo de Leitura Crítica de
-# Gráficos. Diferente de Estatística e Frequência, EM13MAT102 fala de gráfico
-# e pesquisa DIVULGADOS NA MÍDIA — não faz sentido usar as notas da turma
-# aqui, então os números são um exemplo ilustrativo fixo, pensado pra deixar
-# o efeito do eixo cortado bem visível (diferença real pequena, mas que
-# parece enorme no gráfico manipulado).
+# Cenário fixo do Caso 1 (eixo cortado) do conteúdo de Leitura Crítica de Gráficos. Diferente de Estatística e Frequência, EM13MAT102 fala de gráfico e pesquisa DIVULGADOS NA MÍDIA — não faz sentido usar as notas da turma aqui, então os números são um exemplo ilustrativo fixo, pensado pra deixar o efeito do eixo cortado bem visível (diferença real pequena, mas que parece enorme no gráfico manipulado).
 LEITURA_CASO1_CATEGORIAS = ["Produto A", "Produto B"]
 LEITURA_CASO1_VALORES = [48, 50]
 LEITURA_CASO1_EIXO_CORTADO = 45
 
-# Cenário fixo do conteúdo "Relação entre Duas Variáveis" (EM13MAT510). Esta
-# habilidade pede DUAS variáveis numéricas por item (ex.: horas de estudo e
-# nota) -- o resto da Estatística nativa guarda só UMA lista de números
-# (dados_estatistica), então não dá pra reaproveitar: precisaria de uma tela
-# nova pro professor digitar pares e um arquivo de dado novo pra guardar
-# isso. Optou-se por um cenário ilustrativo fixo (mesmo padrão já usado em
-# Leitura Crítica de Gráficos), evitando essa infraestrutura nova.
+# Cenário fixo do conteúdo "Relação entre Duas Variáveis" (EM13MAT510). Esta habilidade pede DUAS variáveis numéricas por item (ex.: horas de estudo e nota) -- o resto da Estatística nativa guarda só UMA lista de números (dados_estatistica), então não dá pra reaproveitar: precisaria de uma tela nova pro professor digitar pares e um arquivo de dado novo pra guardar isso. Optou-se por um cenário ilustrativo fixo (mesmo padrão já usado em Leitura Crítica de Gráficos), evitando essa infraestrutura nova.
 TENDENCIA_HORAS_ESTUDO = [1, 2, 2, 3, 4, 4, 5, 6, 7, 8]
 TENDENCIA_NOTAS = [4.0, 4.5, 5.5, 6.0, 6.0, 7.0, 7.5, 7.5, 8.5, 9.0]
 
@@ -416,14 +372,7 @@ def carregar_conteudos():
         conteudos[ID_CONTEUDO_PESQUISA_AMOSTRAL] = conteudo_padrao_pesquisa_amostral()
     if ID_CONTEUDO_TENDENCIA not in conteudos:
         conteudos[ID_CONTEUDO_TENDENCIA] = conteudo_padrao_tendencia()
-    # Nativos agrupados no topo, na ordem pedagógica de IDS_ESTATISTICA_HUB,
-    # como ponto de partida — sem isso, "Estatística Descritiva" carregava
-    # do JSON na posição em que foi salva (o topo), mas os outros 5 nativos
-    # só existiam nos "if not in conteudos" acima, indo parar no FIM do
-    # dict, espalhados atrás de todo conteúdo cadastrado pelo professor
-    # (confuso, relatado pelo Wenes, 2026-09-14). Depois desse ponto de
-    # partida, mover_conteudo() já deixa reordenar QUALQUER card livremente,
-    # nativo ou não — isto aqui só evita começar bagunçado.
+    # Nativos agrupados no topo, na ordem pedagógica de IDS_ESTATISTICA_HUB, como ponto de partida — sem isso, "Estatística Descritiva" carregava do JSON na posição em que foi salva (o topo), mas os outros 5 nativos só existiam nos "if not in conteudos" acima, indo parar no FIM do dict, espalhados atrás de todo conteúdo cadastrado pelo professor (ordem confusa na lista). Depois desse ponto de partida, mover_conteudo() já deixa reordenar QUALQUER card livremente, nativo ou não — isto aqui só evita começar bagunçado.
     conteudos = {
         **{cid: conteudos[cid] for cid in IDS_ESTATISTICA_HUB if cid in conteudos},
         **{cid: c for cid, c in conteudos.items() if cid not in IDS_ESTATISTICA_HUB},
@@ -483,12 +432,7 @@ def salvar_dados_estatistica(lista_dados):
 
 
 # ---------- Banco de alunos (SQLite) ----------
-# Trocado de JSON pra SQLite porque, numa aula de verdade, vários alunos
-# respondem missões ao mesmo tempo. O jeito antigo lia o arquivo inteiro,
-# mudava um pedaço e regravava o arquivo inteiro — se dois alunos salvassem
-# quase juntos, o segundo podia sobrescrever e apagar o progresso do
-# primeiro. Com SQLite, cada aluno grava só a própria linha (UPDATE/INSERT
-# pontual), então um não pisa no dado do outro.
+# Trocado de JSON pra SQLite porque, numa aula de verdade, vários alunos respondem missões ao mesmo tempo. O jeito antigo lia o arquivo inteiro, mudava um pedaço e regravava o arquivo inteiro — se dois alunos salvassem quase juntos, o segundo podia sobrescrever e apagar o progresso do primeiro. Com SQLite, cada aluno grava só a própria linha (UPDATE/INSERT pontual), então um não pisa no dado do outro.
 def perfil_padrao():
     return {"xp_total": 0, "progresso": {}, "inicio_sessao": time.time()}
 
@@ -522,47 +466,25 @@ def inicializar_banco_db():
                 PRIMARY KEY (aluno, conteudo_id)
             )
         """)
-        # "erros" (acima) é o total do conteúdo inteiro, usado no relatório do
-        # professor. "erros_missao_atual" é zerado a cada vez que o aluno avança
-        # de missão — é o que alimenta o desconto de XP por tentativa (ver
-        # calcular_xp_por_desempenho): sem separar os dois, não teria como saber
-        # quantas vezes o aluno errou NA MISSÃO ATUAL antes de acertar.
+        # "erros" (acima) é o total do conteúdo inteiro, usado no relatório do professor. "erros_missao_atual" é zerado a cada vez que o aluno avança de missão — é o que alimenta o desconto de XP por tentativa (ver calcular_xp_por_desempenho): sem separar os dois, não teria como saber quantas vezes o aluno errou NA MISSÃO ATUAL antes de acertar.
         colunas_progresso = {row["name"] for row in conn.execute("PRAGMA table_info(progresso)")}
         if "erros_missao_atual" not in colunas_progresso:
             conn.execute("ALTER TABLE progresso ADD COLUMN erros_missao_atual INTEGER NOT NULL DEFAULT 0")
-        # "respostas" guarda {"1": "8", "2": "61.7", ...} — a resposta que o
-        # aluno deu em cada missão já concluída. Faltava desde o começo: só
-        # ficava em st.session_state (memória da sessão do navegador), nunca
-        # no banco. "missao_atual" sim é salvo, então o aluno reabrindo o
-        # app noutra sessão continuava exatamente de onde parou, mas as
-        # linhas "✅ Missão N Concluída! (Resposta: ...)" das missões
-        # anteriores apareciam com "None" — a sessão nova nunca teve aquele
-        # valor em memória (bug relatado pelo Wenes, 2026-09-14).
+        # "respostas" guarda {"1": "8", "2": "61.7", ...} — a resposta que o aluno deu em cada missão já concluída. Faltava desde o começo: só ficava em st.session_state (memória da sessão do navegador), nunca no banco. "missao_atual" sim é salvo, então o aluno reabrindo o app noutra sessão continuava exatamente de onde parou, mas as linhas "✅ Missão N Concluída! (Resposta: ...)" das missões anteriores apareciam com "None" — a sessão nova nunca teve aquele valor em memória.
         if "respostas" not in colunas_progresso:
             conn.execute("ALTER TABLE progresso ADD COLUMN respostas TEXT NOT NULL DEFAULT '{}'")
-        # Nome que o professor quer ver NO RELATÓRIO ("João Batista"), separado
-        # do "nome" com que o aluno faz login ("Goku99", "Player1"). São coisas
-        # diferentes de propósito: "nome" é chave primária e liga o aluno ao
-        # progresso dele, então renomear quebraria o vínculo — no próximo login
-        # o aluno cairia num perfil vazio e perderia o XP. Esta coluna é só
-        # exibição, nunca é usada pra buscar nada.
+        # Nome que o professor quer ver NO RELATÓRIO ("João Batista"), separado do "nome" com que o aluno faz login ("Goku99", "Player1"). São coisas diferentes de propósito: "nome" é chave primária e liga o aluno ao progresso dele, então renomear quebraria o vínculo — no próximo login o aluno cairia num perfil vazio e perderia o XP. Esta coluna é só exibição, nunca é usada pra buscar nada.
         colunas_alunos = {row["name"] for row in conn.execute("PRAGMA table_info(alunos)")}
         if "nome_relatorio" not in colunas_alunos:
             conn.execute("ALTER TABLE alunos ADD COLUMN nome_relatorio TEXT NOT NULL DEFAULT ''")
-        # Contador de acessos: uma linha por dia com quantas vezes o app foi
-        # aberto (cada sessão nova do navegador conta uma vez). Só o número:
-        # não guarda IP, aparelho nem quem abriu.
+        # Contador de acessos: uma linha por dia com quantas vezes o app foi aberto (cada sessão nova do navegador conta uma vez). Só o número: não guarda IP, aparelho nem quem abriu.
         conn.execute("""
             CREATE TABLE IF NOT EXISTS acessos (
                 dia TEXT PRIMARY KEY,
                 total INTEGER NOT NULL DEFAULT 0
             )
         """)
-        # Uma linha por TENTATIVA de resposta (acerto ou erro). É daqui que sai o
-        # "acerto por aluno em cada habilidade" do Painel do Professor: o campo
-        # "missao_atual" só diz até onde o aluno chegou, não quanto ele acertou.
-        # Só passa a existir a partir da primeira resposta depois desta versão:
-        # o histórico antigo não guardava o resultado de cada missão.
+        # Uma linha por TENTATIVA de resposta (acerto ou erro). É daqui que sai o "acerto por aluno em cada habilidade" do Painel do Professor: o campo "missao_atual" só diz até onde o aluno chegou, não quanto ele acertou. Só passa a existir a partir da primeira resposta depois desta versão: o histórico antigo não guardava o resultado de cada missão.
         conn.execute("""
             CREATE TABLE IF NOT EXISTS tentativas_missao (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -628,8 +550,7 @@ def migrar_json_para_sqlite_se_necessario():
 
         alunos_antigos = dados_antigos.get("alunos", {})
         for nome, perfil in alunos_antigos.items():
-            # Compatibilidade com um formato ainda mais antigo (só Estatística,
-            # sem "progresso" por conteúdo).
+            # Compatibilidade com um formato ainda mais antigo (só Estatística, sem "progresso" por conteúdo).
             if "progresso" not in perfil:
                 perfil["progresso"] = {
                     ID_CONTEUDO_ESTATISTICA: {
@@ -697,12 +618,7 @@ inicializar_banco_db()
 migrar_json_para_sqlite_se_necessario()
 registrar_acesso_se_novo()
 
-# A navegação tem UM eixo só: 'pagina' diz onde o aluno está.
-# 'conteudo_ativo' só significa alguma coisa quando pagina == PAGINA_MATERIA, e
-# 'aba_materia' só existe dentro de uma matéria. Antes eram dois eixos
-# independentes ("qual página" x "qual matéria"), o que permitia estados sem
-# sentido (Início + Frações) e fazia a Trilha de Missões depender de uma escolha
-# feita em outro canto da tela — o aluno clicava sem saber onde ia parar.
+# A navegação tem UM eixo só: 'pagina' diz onde o aluno está. 'conteudo_ativo' só significa alguma coisa quando pagina == PAGINA_MATERIA, e 'aba_materia' só existe dentro de uma matéria. Antes eram dois eixos independentes ("qual página" x "qual matéria"), o que permitia estados sem sentido (Início + Frações) e fazia a Trilha de Missões depender de uma escolha feita em outro canto da tela — o aluno clicava sem saber onde ia parar.
 PAGINA_INICIO = "inicio"
 PAGINA_MATERIA = "materia"
 PAGINA_PROFESSOR = "professor"
@@ -715,11 +631,7 @@ ABA_PROFESSOR_VISAO = "📊 Visão Geral"
 ABA_PROFESSOR_CONTEUDOS = "➕ Gerenciar Conteúdos"
 ABA_PROFESSOR_CONFIG = "⚙️ Configurações"
 
-# A sessão do professor expira sozinha depois desse tempo SEM uso do painel
-# (cada renderização do painel autenticado renova o prazo). Motivo: professor e
-# aluno dividem a mesma sessão do navegador — é o computador da sala de aula
-# passando de mão em mão —, então um painel destravado esquecido aberto entrega
-# notas da turma, exclusão de alunos e troca de senha pra quem sentar depois.
+# A sessão do professor expira sozinha depois desse tempo SEM uso do painel (cada renderização do painel autenticado renova o prazo). Motivo: professor e aluno dividem a mesma sessão do navegador — é o computador da sala de aula passando de mão em mão —, então um painel destravado esquecido aberto entrega notas da turma, exclusão de alunos e troca de senha pra quem sentar depois.
 MINUTOS_SESSAO_PROFESSOR = 30
 
 if 'conteudos' not in st.session_state: st.session_state.conteudos = carregar_conteudos()
@@ -727,9 +639,7 @@ if 'config' not in st.session_state: st.session_state.config = carregar_config()
 if 'dados_estatistica' not in st.session_state: st.session_state.dados_estatistica = carregar_dados_estatistica()
 if 'aluno_ativo' not in st.session_state: st.session_state.aluno_ativo = ""
 if 'conteudo_ativo' not in st.session_state: st.session_state.conteudo_ativo = ID_CONTEUDO_ESTATISTICA
-# Guardamos o INSTANTE EM QUE A SESSÃO EXPIRA, não um booleano "está logado":
-# com o booleano, ficar autenticado era um estado sem prazo nenhum, que só
-# terminava se alguém lembrasse de clicar em "Sair do Painel". 0.0 = sem sessão.
+# Guardamos o INSTANTE EM QUE A SESSÃO EXPIRA, não um booleano "está logado": com o booleano, ficar autenticado era um estado sem prazo nenhum, que só terminava se alguém lembrasse de clicar em "Sair do Painel". 0.0 = sem sessão.
 if 'professor_auth_expira_em' not in st.session_state: st.session_state.professor_auth_expira_em = 0.0
 if 'pagina' not in st.session_state: st.session_state.pagina = PAGINA_INICIO
 if 'aba_materia' not in st.session_state: st.session_state.aba_materia = ABA_TEORIA
@@ -839,13 +749,7 @@ def progresso_atual(conteudo_id=None):
         if row is None:
             return progresso_padrao()
         respostas = json.loads(row["respostas"]) if row["respostas"] else {}
-        # Recoloca as respostas salvas em st.session_state: é de lá que todo
-        # "✅ Missão N Concluída! (Resposta: ...)" já espalhado pelo código
-        # lê o valor (ver verificar_resposta) — sem essa "hidratação" aqui,
-        # cada um desses 40+ pontos de exibição precisaria ser reescrito pra
-        # ler de outro lugar. Só preenche o que ainda não está em memória
-        # (não pisa numa resposta desta MESMA sessão, mais recente que a
-        # gravada no banco no meio de uma missão em andamento).
+        # Recoloca as respostas salvas em st.session_state: é de lá que todo "✅ Missão N Concluída! (Resposta: ...)" já espalhado pelo código lê o valor (ver verificar_resposta) — sem essa "hidratação" aqui, cada um desses 40+ pontos de exibição precisaria ser reescrito pra ler de outro lugar. Só preenche o que ainda não está em memória (não pisa numa resposta desta MESMA sessão, mais recente que a gravada no banco no meio de uma missão em andamento).
         for idx_str, resp in respostas.items():
             chave = f"m_{conteudo_id}_{idx_str}"
             if chave not in st.session_state:
@@ -939,47 +843,21 @@ def excluir_alunos(nomes):
         st.session_state.aluno_ativo = ""
     st.rerun()
 
-# As missões dos conteúdos NATIVOS (Estatística Descritiva e Tabela de
-# Frequência) ficam no código (não em conteudos.json), então o mapeamento delas
-# para a BNCC também precisa ficar aqui — um dicionário por conteúdo nativo,
-# indexado pelo id dele.
+# As missões dos conteúdos NATIVOS (Estatística Descritiva e Tabela de Frequência) ficam no código (não em conteudos.json), então o mapeamento delas para a BNCC também precisa ficar aqui — um dicionário por conteúdo nativo, indexado pelo id dele.
 #
-# Estatística Descritiva: todas as 10 exercitam a MESMA habilidade —
-# EM13MAT316, que trata de calcular e interpretar medidas de tendência central
-# (média, moda, mediana) e de dispersão (amplitude, variância e desvio padrão).
+# Estatística Descritiva: todas as 10 exercitam a MESMA habilidade — EM13MAT316, que trata de calcular e interpretar medidas de tendência central (média, moda, mediana) e de dispersão (amplitude, variância e desvio padrão).
 #
-# Tabela e Gráfico de Frequência: todas as FREQ_N_FAIXAS+3 exercitam
-# EM13MAT408 — construir e interpretar tabelas e gráficos de frequência a
-# partir de dados de uma amostra. (CUIDADO: não confundir com EM13MAT406, que
-# é outra habilidade — "utilizar conceitos básicos de linguagem de
-# programação". Erro real que já aconteceu aqui, corrigido em 2026-09-13
-# depois de conferir o PDF oficial da BNCC do Ensino Médio.)
+# Tabela e Gráfico de Frequência: todas as FREQ_N_FAIXAS+3 exercitam EM13MAT408 — construir e interpretar tabelas e gráficos de frequência a partir de dados de uma amostra. (CUIDADO: não confundir com EM13MAT406, que é outra habilidade — "utilizar conceitos básicos de linguagem de programação". Conferido no documento oficial da BNCC do Ensino Médio.)
 #
-# Leitura Crítica de Gráficos: as 8 exercitam EM13MAT102 — analisar
-# tabelas/gráficos/amostras divulgados na mídia, identificando quando a
-# amostra ou a escala usada pode induzir a erro de interpretação.
+# Leitura Crítica de Gráficos: as 8 exercitam EM13MAT102 — analisar tabelas/gráficos/amostras divulgados na mídia, identificando quando a amostra ou a escala usada pode induzir a erro de interpretação.
 #
-# Comparando Diagramas: as 6 exercitam EM13MAT409 — interpretar e comparar
-# conjuntos de dados por meio de diferentes diagramas (histograma, box-plot,
-# ramos e folhas), reconhecendo o mais eficiente pra cada análise.
+# Comparando Diagramas: as 6 exercitam EM13MAT409 — interpretar e comparar conjuntos de dados por meio de diferentes diagramas (histograma, box-plot, ramos e folhas), reconhecendo o mais eficiente pra cada análise.
 #
-# Planejando uma Pesquisa: as 6 exercitam EM13MAT202 — planejar e executar
-# pesquisa amostral, comunicando o resultado em relatório com gráficos e
-# medidas de tendência central e dispersão. Adaptado: em vez de fazer o
-# aluno coletar dado real (o app não tem como), a sequência é de DECISÃO
-# (população x amostra, tamanho, o que vai no relatório), fechando com uma
-# missão que aponta de volta pro conteúdo de Estatística Descritiva como o
-# relatório de exemplo pronto.
+# Planejando uma Pesquisa: as 6 exercitam EM13MAT202 — planejar e executar pesquisa amostral, comunicando o resultado em relatório com gráficos e medidas de tendência central e dispersão. Adaptado: em vez de fazer o aluno coletar dado real (o app não tem como), a sequência é de DECISÃO (população x amostra, tamanho, o que vai no relatório), fechando com uma missão que aponta de volta pro conteúdo de Estatística Descritiva como o relatório de exemplo pronto.
 #
-# Relação entre Duas Variáveis: as 6 exercitam EM13MAT510 — investigar
-# conjuntos de dados de duas variáveis numéricas, usando uma reta de
-# tendência pra descrever e prever a relação entre elas.
+# Relação entre Duas Variáveis: as 6 exercitam EM13MAT510 — investigar conjuntos de dados de duas variáveis numéricas, usando uma reta de tendência pra descrever e prever a relação entre elas.
 #
-# Só estas habilidades são definidas no código, de propósito: os demais
-# conteúdos têm campo livre no cadastro, preenchido pelo professor consultando
-# a BNCC. Não convém "chutar" códigos aqui, porque um código errado no
-# relatório é pior que nenhum. Confira em http://basenacionalcomum.mec.gov.br/
-# antes de usar no TCC.
+# Só estas habilidades são definidas no código, de propósito: os demais conteúdos têm campo livre no cadastro, preenchido pelo professor consultando a BNCC. Não convém "chutar" códigos aqui, porque um código errado no relatório é pior que nenhum. Confira em http://basenacionalcomum.mec.gov.br/ antes de usar.
 BNCC_MISSOES_NATIVAS = {
     ID_CONTEUDO_ESTATISTICA: {i: "EM13MAT316" for i in range(1, 11)},
     ID_CONTEUDO_FREQUENCIA: {i: "EM13MAT408" for i in range(1, FREQ_N_FAIXAS + 4)},
@@ -1052,9 +930,7 @@ def campo_habilidade_bncc(rotulo, valor_atual="", chave=None, ajuda=""):
     indice = opcoes.index(valor_atual) if valor_atual else None
     escolhida = st.selectbox(
         rotulo, opcoes, index=indice, key=chave, help=ajuda,
-        # Rótulo com a descrição INTEIRA: o Streamlit só pesquisa dentro do rótulo, e
-        # a lista já corta a linha sozinha. Assim dá para achar "mediana" mesmo que a
-        # palavra esteja no fim da descrição.
+        # Rótulo com a descrição INTEIRA: o Streamlit só pesquisa dentro do rótulo, e a lista já corta a linha sozinha. Assim dá para achar "mediana" mesmo que a palavra esteja no fim da descrição.
         format_func=lambda c: f"{c} · {habilidades[c]}" if c in habilidades else c,
         placeholder="Digite o código ou uma palavra da habilidade",
     )
@@ -1066,7 +942,7 @@ def habilidades_bncc_do_conteudo(cid, c):
     conteúdo — nativo ou cadastrado pelo professor. Lista vazia se nenhuma
     missão foi mapeada. Usado só no Painel do Professor (Gerenciar
     Conteúdos): é informação de planejamento curricular, sem utilidade pro
-    aluno durante o jogo — decisão do Wenes (2026-09-14)."""
+    aluno durante o jogo."""
     if cid in BNCC_MISSOES_NATIVAS:
         return sorted(set(BNCC_MISSOES_NATIVAS[cid].values()))
     codigos = {str(m.get("bncc", "")).strip() for m in c.get("missoes", [])}
@@ -1175,11 +1051,7 @@ def acerto_por_aluno_e_habilidade(conteudo_id=None):
 
 # Total de missões de cada conteúdo NATIVO — não dá pra contar
 # len(conteudo["missoes"]) como se faz com os conteúdos do professor, porque
-# aqui não existe essa lista: as missões são funções Python (ver bloco 7). Um
-# dicionário por conteúdo nativo, em vez de supor "todo tipo=='estatico' tem
-# 10 missões" (o que quebraria em silêncio se um novo conteúdo nativo tivesse
-# uma quantidade diferente — foi exatamente o que aconteceu ao criar o
-# conteúdo de Frequência).
+# aqui não existe essa lista: as missões são funções Python (ver bloco 7). Um dicionário por conteúdo nativo, em vez de supor "todo tipo=='estatico' tem 10 missões" (o que quebraria em silêncio se um novo conteúdo nativo tivesse uma quantidade diferente — foi exatamente o que aconteceu ao criar o conteúdo de Frequência).
 TOTAL_MISSOES_NATIVAS = {
     ID_CONTEUDO_ESTATISTICA: 10,
     ID_CONTEUDO_FREQUENCIA: FREQ_N_FAIXAS + 3,  # 1 por faixa + total + freq. relativa + gráfico
@@ -1189,11 +1061,7 @@ TOTAL_MISSOES_NATIVAS = {
     ID_CONTEUDO_TENDENCIA: 6,
 }
 
-# XP máximo de CADA conteúdo NATIVO, acertando tudo de primeira — não tem
-# como calcular isso sozinho porque os pontos de cada missão estão escritos
-# direto como argumento em cada chamada de verificar_resposta(...), não numa
-# tabela; se o XP de alguma missão nativa mudar, os números aqui precisam
-# ser somados à mão de novo (2026-09-14):
+# XP máximo de CADA conteúdo NATIVO, acertando tudo de primeira — não tem como calcular isso sozinho porque os pontos de cada missão estão escritos direto como argumento em cada chamada de verificar_resposta(...), não numa tabela; se o XP de alguma missão nativa mudar, os números aqui precisam ser somados à mão de novo:
 #   Estatística Descritiva: 10+20+30+10+10+20+40+40+60+80 = 320
 #   Frequência:              20*5 + 20 + 30 + 20           = 170
 #   Leitura Crítica:         20+20+20+30 + 20+20+20+30     = 180
@@ -1216,9 +1084,8 @@ def xp_maximo_de_conteudo(cid, c):
     nativo (tabela acima) ou cadastrado pelo professor (soma o "Pontos (XP)"
     de cada missão dele). Usado tanto pro badge "Total X XP" em cada card
     (Painel do Professor > Gerenciar Conteúdos) quanto pro seletor de
-    "Meta de XP" em Configurações — pedido do Wenes (2026-09-17) e sugestão
-    parecida do orientador (ver "Conversar com orientador 02.txt": escolher
-    a disciplina, mostrar o XP dela, definir a meta como % disso)."""
+    "Meta de XP" em Configurações (escolher a disciplina, mostrar o XP dela e
+    definir a meta como porcentagem desse total)."""
     if cid in XP_MAXIMO_POR_CONTEUDO_NATIVO:
         return XP_MAXIMO_POR_CONTEUDO_NATIVO[cid]
     return sum(m.get("pontos", 10) for m in c.get("missoes", []))
@@ -1229,10 +1096,9 @@ def xp_maximo_catalogo_atual():
     separado por grupo. Recalculado toda vez que é chamado, então sempre
     reflete o catálogo ATUAL — cresce sozinho quando o professor cadastra
     conteúdo novo. Mostrado em Configurações como referência pra decidir a
-    Meta de XP (pedido do Wenes, 2026-09-14): sem esse número, não tem como
-    saber se 500 XP é "quase tudo" ou "quase nada" do que existe pra jogar.
-    Separado em dois números (não só um total misturado) porque o Wenes
-    achou confuso um valor só somando as duas coisas (2026-09-17)."""
+    Meta de XP: sem esse número, não tem como saber se 500 XP é "quase tudo"
+    ou "quase nada" do que existe pra jogar. Separado em dois números (não só
+    um total misturado) para ficar claro quanto vem de cada grupo."""
     nativo = XP_MAXIMO_CONTEUDO_NATIVO
     cadastrado = sum(
         xp_maximo_de_conteudo(cid, c)
@@ -1286,8 +1152,7 @@ def progresso_resumo_aluno():
         ).fetchall()
     finally:
         conn.close()
-    # missao_atual aponta pra PRÓXIMA missão a responder (começa em 1), então o
-    # que já foi concluído é sempre missao_atual - 1.
+    # missao_atual aponta pra PRÓXIMA missão a responder (começa em 1), então o que já foi concluído é sempre missao_atual - 1.
     return {linha["conteudo_id"]: max(linha["missao_atual"] - 1, 0) for linha in linhas}
 
 
@@ -1296,7 +1161,7 @@ def progresso_resumo_aluno():
 # ==========================================
 st.markdown("""
 <style>
-    /* Limita a largura do conteúdo principal e centraliza (estilo ChatGPT/X.com)
+    /* Limita a largura do conteúdo principal e centraliza
        em vez de esticar de ponta a ponta em monitores grandes. Não afeta a
        barra lateral, que tem sua própria largura fixa. O Streamlit já aplica
        um padding interno grande por padrão; reduzimos ele aqui pra sobrar
@@ -1311,27 +1176,21 @@ st.markdown("""
            sobrar espaço embaixo da barra flutuante (Deploy/menu) — mas
            aqui essa barra é baixa e o conteúdo já tem título próprio logo
            abaixo, então sobrava um vão vazio grande no topo de toda
-           página, banner ou não (relatado pelo Wenes, 2026-09-17,
-           print mostrando o espaço em ambos os casos). Medido: era 96px,
-           cortado pra 24px, depois pra 0 — aí ficou colado demais ("vixe,
-           agora ficou colado"), então 38px (~1cm a 96dpi) de volta, pra
-           dar uma folga mínima. Mais 19px (~5mm) depois que a barra de
-           ferramentas do Streamlit voltou a mostrar o ícone de abrir/
-           fechar a barra lateral, pra não ficar colado nele — depois
-           ajustado à mão pelo Wenes direto no arquivo pra 60px ("ficou
-           perfeito", 2026-09-17). */
+           página, banner ou não. O valor original era 96px; reduzido para 60px,
+           que deixa uma folga mínima e não encosta no ícone de abrir/fechar a
+           barra lateral da barra de ferramentas do Streamlit. */
         padding-top: 60px;
     }
 
     /* Só o botão "Deploy" (chrome do Streamlit Cloud) — NÃO a barra inteira.
-       O "⋮" fica visível (2026-09-25, pedido do Wenes) pra trocar o tema
+       O "⋮" fica visível pra trocar o tema
        claro/escuro. Versão
        anterior escondia a barra toda (`[data-testid="stHeader"]
        {display:none}`), e isso quebrou o botão de expandir a barra
-       lateral: quando o Wenes encolhia a barra lateral e recarregava a
+       lateral: ao encolher a barra lateral e recarregar a
        página, o botão pra abrir de novo (`stExpandSidebarButton`) mora
        DENTRO dessa mesma barra escondida, então ficava sem jeito nenhum
-       de reabrir (bug relatado 2026-09-17). Escondendo só os dois botões
+       de reabrir. Escondendo só os dois botões
        específicos, o resto da barra (inclusive esse controle) continua
        funcionando normalmente. */
     [data-testid="stAppDeployButton"] {
@@ -1344,8 +1203,8 @@ st.markdown("""
        da página, com o gap de 16px entre itens contando mesmo pra quem tem
        altura zero. No topo da página isso somava 96px de vão vazio — medido
        ao vivo, era o resto do espaço que sobrava depois do padding-top e da
-       barra Deploy já cortados (Wenes, 2026-09-17: "ainda tá uns 2cm"). Achado
-       inspecionando o DOM: 6 stElementContainer de altura 0 antes do primeiro
+       barra Deploy já cortados. Verificado inspecionando o DOM: 6
+       stElementContainer de altura 0 antes do primeiro
        botão. display:none tira da lista de vez, sem gap nenhum — e um <style>
        escondido continua valendo normalmente, isso é comportamento padrão do
        HTML/CSS, não depende do elemento estar visível. */
@@ -1362,8 +1221,8 @@ st.markdown("""
        sobra de uma versão antiga. Deixada como está (não é deste ajuste),
        mas fica o registro pra quem for limpar código depois. */
 
-    /* Selo de XP acima da Trilha de Missões (2026-09-05) — pedido do usuário
-       pra dar mais destaque ao XP acumulado, além do texto pequeno que já
+    /* Selo de XP acima da Trilha de Missões — destaca o XP acumulado,
+       além do texto pequeno que já
        existe na barra lateral. Gradiente opaco + texto branco (mesma técnica
        do .home-banner), não rgba() semi-transparente: aqui o objetivo é
        "saltar aos olhos" como um emblema de jogo, não se misturar ao tema. */
@@ -1403,7 +1262,7 @@ st.markdown("""
        detectar o tema: rgba() semi-transparente vira um "tingimento" sobre
        o que estiver por trás, então se adapta sozinho. Opacidade calibrada
        pra bater com os tons reais que o Streamlit usa (~#f0f2f6 no claro,
-       ~#262730 no escuro — conferido ao vivo nos dois). Sem "color" no
+       ~#262730 no escuro). Sem "color" no
        texto, ele herda a cor certa do tema automaticamente. */
     .home-step-card {
         background-color: rgba(148, 163, 184, 0.16); border: 1px solid rgba(148, 163, 184, 0.4); border-radius: 12px;
@@ -1522,8 +1381,7 @@ st.markdown("""
     /* Cada conteúdo cadastrado (Painel do Professor > Gerenciar Conteúdos) é
        um st.container(border=True) — cartão de verdade, com borda e cantos
        arredondados, em vez da lista em colunas com uma linha horizontal
-       entre cada item. Pedido do Wenes (2026-09-14): "mais elegante e
-       estilizado", mas com estilo PRÓPRIO do painel do professor — não é
+       entre cada item. Estilo PRÓPRIO do painel do professor — não é
        pra copiar o card do aluno na Início, que mostra outra informação. */
     div[class*="st-key-card_conteudo_"] {
         margin-bottom: 12px;
@@ -1551,8 +1409,8 @@ st.markdown("""
 
     /* Cards suaves dos 3 totais de XP em Configurações (Matéria Padrão /
        Matérias Cadastradas / Total do catálogo) — antes usava st.metric(),
-       que só desenha número preto puro sem nenhuma cor de fundo; o Wenes
-       achou "feio" pro Painel do Professor (2026-09-17), queria algo mais
+       que só desenha número preto puro sem nenhuma cor de fundo; aqui se
+       usa um visual mais
        suave. Reaproveita as MESMAS cores dos badges de card (indigo dos
        badges de tipo, verde do BNCC) + um terceiro tom neutro pro total,
        que é soma dos outros dois, não uma categoria própria. */
@@ -1574,7 +1432,7 @@ st.markdown("""
         font-weight: 700;
     }
     /* Em tela estreita (celular), st.columns empilha os 3 cards um embaixo
-       do outro — e aí eles ficavam colados (relatado pelo Wenes, 2026-09-22).
+       do outro — e aí eles ficavam colados.
        Causa: o stMarkdownContainer do Streamlit já vem com margin-bottom:
        -16px por padrão (serve pra cancelar um espaçamento dele mesmo quando
        tem mais coisa depois dentro do mesmo bloco). Em coluna lado a lado
@@ -1595,14 +1453,12 @@ st.markdown("""
 
     /* Pop-up de "Salvo com sucesso" (ver renderizar_flash_pendente): fixo no
        canto superior direito, por cima de tudo, pra não precisar rolar a
-       tela pra ver — bug relatado pelo Wenes (2026-09-17), editou um
-       conteúdo longo, salvou, e a mensagem apareceu lá em cima, fora da
-       tela. st.toast() faria isso nativamente (mesma posição, canto
-       superior direito), mas parou de funcionar neste ambiente. Pequeno de
-       propósito ("espero que não seja grandão", Wenes 2026-09-17): não é um
-       modal, não bloqueia clique em nada por trás. Some sozinho em 3s via
-       animação CSS (Wenes, 2026-09-17: "rápido, um dois três segundos, não
-       pode ficar lá a vida toda") — st.markdown não executa <script>, então
+       tela pra ver (caso típico: editar um conteúdo longo, salvar, e a
+       mensagem aparecer lá em cima, fora da tela). st.toast() faria isso
+       nativamente (mesma posição, canto superior direito), mas parou de
+       funcionar neste ambiente. Pequeno de propósito: não é um modal, não
+       bloqueia clique em nada por trás. Some sozinho em 3s via animação CSS
+       — st.markdown não executa <script>, então
        não dá pra usar um timer JS; keyframes resolve sem precisar de JS. */
     @keyframes flash-toast-sumir {
         0%, 80% { opacity: 1; }
@@ -1642,8 +1498,8 @@ st.markdown("""
         flex: 0 0 auto !important;
     }
     /* Em tela estreita (celular), o Streamlit faz duas coisas ao mesmo tempo
-       que juntas quebravam essa fileira de botões (confirmado testando ao
-       vivo no celular, 2026-09-14): empilha QUALQUER st.columns() na
+       que juntas quebravam essa fileira de botões (verificado no celular):
+       empilha QUALQUER st.columns() na
        vertical, E força min-width: calc(100% - 24px) em cada coluna —
        quase a largura inteira do card, pensado pra layout empilhado. A
        primeira tentativa de correção só forçou a linha a ficar horizontal
@@ -1664,8 +1520,8 @@ st.markdown("""
     }
 
     /* Botão "Sair" do Painel do Professor: empurra pra borda direita da
-       coluna sem esticar o botão. Duas pegadinhas encontradas medindo ao
-       vivo (2026-09-14), não adivinhando:
+       coluna sem esticar o botão. Duas pegadinhas, encontradas medindo no
+       navegador:
        1) O container do Streamlit por baixo dos panos já é flex-direction:
           COLUNA — então justify-content controla o eixo VERTICAL, não o
           horizontal (por isso não tinha efeito nenhum). Quem alinha no eixo
@@ -1683,7 +1539,7 @@ st.markdown("""
     }
 
     /* Sobe o conteúdo inteiro da barra lateral (Início + tudo abaixo) uns 5mm
-       (~19px) pra cima — pedido do Wenes (2026-09-13). O espaço de origem não
+       (~19px) pra cima. O espaço de origem não
        é nosso: é margin-bottom:16px do próprio cabeçalho do Streamlit (ícone
        de recolher a barra), medido ao vivo via getBoundingClientRect(); não
        dá pra mexer nesse cabeçalho sem arriscar cortar o ícone, então o ajuste
@@ -1692,7 +1548,7 @@ st.markdown("""
         margin-top: -19px;
     }
 
-    /* Menu lateral estilo app (Gmail/ChatGPT): botões colados, alinhados à esquerda,
+    /* Menu lateral: botões colados, alinhados à esquerda,
        com destaque visual para o item ativo e hover suave no restante. */
     div[data-testid="stSidebar"] button {
         margin-bottom: 4px;
@@ -1762,8 +1618,8 @@ st.markdown("""
        Padrão" (roxo/azul) de "Matérias Cadastradas" (verde) mesmo em
        repouso, sem pintar o botão inteiro (encostaria na cor do item
        ativo e viraria parque de diversão). Primeira versão era cinza neutro,
-       mas ficou imperceptível demais — trocada por cor de verdade a pedido
-       do Wenes (2026-09-14), mantendo elegante por ser só um traço fino, não
+       mas ficou imperceptível demais — trocada por cor de verdade,
+       mantendo discreto por ser só um traço fino, não
        um preenchimento. Cores emprestadas dos badges do Painel do Professor
        (.badge-conteudo-tipo / .badge-conteudo-bncc), pra usar a mesma
        linguagem visual em vez de inventar uma terceira paleta. Some quando o
@@ -1864,7 +1720,7 @@ st.markdown("""
         flex-direction: column;
         align-items: center;
         text-align: center;
-        /* Aproxima o título da logo — pedido do Wenes (2026-09-13). O
+        /* Aproxima o título da logo. O
            espaçamento de origem (16px) não vem de nenhuma margem nossa: é o
            "gap" padrão que o Streamlit aplica entre elementos empilhados
            dentro de um container, confirmado medindo ao vivo (getBoundingClientRect
@@ -1945,9 +1801,7 @@ def calcular_frequencia(dados, n_faixas=FREQ_N_FAIXAS):
     val_min = min(dados)
     val_max = max(dados)
     amplitude = val_max - val_min
-    # amplitude 0 (todo mundo com o mesmo valor): usa largura 1 só pra não
-    # dividir por zero — as faixas ficam sem sentido prático, mas o cálculo
-    # não quebra (caso raro, professor dificilmente cadastra amostra assim).
+    # amplitude 0 (todo mundo com o mesmo valor): usa largura 1 só pra não dividir por zero — as faixas ficam sem sentido prático, mas o cálculo não quebra (caso raro, professor dificilmente cadastra amostra assim).
     largura = amplitude / n_faixas if amplitude > 0 else 1
 
     faixas = []
@@ -1962,8 +1816,7 @@ def calcular_frequencia(dados, n_faixas=FREQ_N_FAIXAS):
     for f in faixas:
         f["freq_relativa"] = (f["freq"] / total * 100) if total else 0
 
-    # Faixa modal: a de maior frequência (empate resolvido pela primeira que
-    # aparece — caso raro, não crítico pra fins didáticos).
+    # Faixa modal: a de maior frequência (empate resolvido pela primeira que aparece — caso raro, não crítico pra fins didáticos).
     faixa_moda = max(faixas, key=lambda f: f["freq"])
 
     return dict(faixas=faixas, total=total, faixa_moda=faixa_moda)
@@ -2042,13 +1895,7 @@ def prever_pela_reta(reta, x):
 # ==========================================
 # 5. VERIFICAÇÃO GENÉRICA DE RESPOSTAS
 # ==========================================
-# Sem isso, um aluno que acerta de primeira e um que erra 20 vezes na mesma
-# missão ganhavam o mesmo XP — o professor orientador apontou esse problema
-# (2026-09-05). A correção NÃO pode ser "perder XP ao errar": além de zerar o
-# aluno que erra metade das vezes (o próprio Wenes notou isso), contradiria a
-# Justificativa do TCC, que trata o erro como parte do processo, não motivo de
-# perda. A solução é o XP da missão diminuir com as tentativas, mas nunca ficar
-# negativo nem chegar a zero — o aluno sempre ganha algo por terminar.
+# Sem isso, um aluno que acerta de primeira e um que erra 20 vezes na mesma missão ganhavam o mesmo XP. A correção NÃO pode ser "perder XP ao errar": além de zerar o aluno que erra metade das vezes, contradiria a proposta pedagógica do sistema, que trata o erro como parte do processo, não motivo de perda. A solução é o XP da missão diminuir com as tentativas, mas nunca ficar negativo nem chegar a zero — o aluno sempre ganha algo por terminar.
 DESCONTO_XP_POR_ERRO = 0.20   # cada erro NESTA missão reduz 20% do XP dela
 PISO_XP_FRACAO = 0.20         # nunca menos que 20% do valor configurado pelo professor
 
@@ -2066,11 +1913,7 @@ def calcular_xp_por_desempenho(pontos_base, erros_nesta_missao):
 
 
 def verificar_resposta(conteudo_id, missao_id, resposta_aluno, resposta_certa, pontos, tipo="numero"):
-    # Rótulo curto: o cabeçalho "### 📍 Missão N: ..." logo acima já diz qual
-    # missão é — repetir "da Missão N" no botão era informação redundante
-    # (mesmo padrão de simplificação pedido pelo Wenes em 2026-09-14 pros
-    # botões do Painel do Professor, aplicado aqui porque este é o botão de
-    # missão que aparece em TODO conteúdo do app, nativo ou cadastrado).
+    # Rótulo curto: o cabeçalho "### 📍 Missão N: ..." logo acima já diz qual missão é — repetir "da Missão N" no botão era informação redundante (mesmo padrão de simplificação usado nos botões do Painel do Professor, aplicado aqui porque este é o botão de missão que aparece em TODO conteúdo do app, nativo ou cadastrado).
     if st.button("Verificar Resposta", key=f"btn_{conteudo_id}_{missao_id}"):
         if resposta_aluno is None or str(resposta_aluno).strip() == "":
             st.error("⚠️ Escolha uma alternativa antes de verificar!" if tipo == "multipla"
@@ -2079,11 +1922,7 @@ def verificar_resposta(conteudo_id, missao_id, resposta_aluno, resposta_certa, p
 
         acertou = False
         if tipo == "multipla":
-            # Comparação exata: o aluno não digita nada, apenas escolhe uma das
-            # alternativas cadastradas, então os dois lados vêm do mesmo texto.
-            # É justamente isso que a múltipla escolha resolve — em resposta
-            # digitada, "media" e "média" são strings diferentes e o aluno perde
-            # o ponto por causa do acento, não por causa do conteúdo.
+            # Comparação exata: o aluno não digita nada, apenas escolhe uma das alternativas cadastradas, então os dois lados vêm do mesmo texto. É justamente isso que a múltipla escolha resolve — em resposta digitada, "media" e "média" são strings diferentes e o aluno perde o ponto por causa do acento, não por causa do conteúdo.
             acertou = str(resposta_aluno).strip() == str(resposta_certa).strip()
         elif tipo == "numero":
             try:
@@ -2114,25 +1953,14 @@ def verificar_resposta(conteudo_id, missao_id, resposta_aluno, resposta_certa, p
                 mensagem = f"🎉 Correto! +{xp_ganho} XP de {pontos} XP (descontado pelas tentativas)"
             else:
                 mensagem = f"🎉 Correto! +{xp_ganho} XP!"
-            # Guardado em session_state em vez de um st.success() mostrado
-            # aqui na hora: o st.rerun() logo abaixo troca a tela quase
-            # instantaneamente, e a mensagem só ficava visível por uma fração
-            # de segundo — sem tempo de leitura nenhum (relatado pelo Wenes,
-            # 2026-09-14: não dava tempo de ler nem tirando
-            # print). Quem desenha esse texto na tela, de forma PERSISTENTE
-            # (sem sumir sozinha), é renderizar_ultimo_resultado(), chamada
-            # embaixo de tudo na aba Missões (perto de onde o aluno clicou).
+            # Guardado em session_state em vez de um st.success() mostrado aqui na hora: o st.rerun() logo abaixo troca a tela quase instantaneamente, e a mensagem só ficava visível por uma fração de segundo — sem tempo de leitura nenhum. Quem desenha esse texto na tela, de forma PERSISTENTE (sem sumir sozinha), é renderizar_ultimo_resultado(), chamada embaixo de tudo na aba Missões (perto de onde o aluno clicou).
             st.session_state[f"ultimo_resultado_{conteudo_id}"] = mensagem
             perfil["xp_total"] = perfil.get("xp_total", 0) + xp_ganho
             prog["missao_atual"] += 1
             prog["erros_missao_atual"] = 0  # zera para a próxima missão começar sem desconto
             prog["historico"].append(f"✅ Missão {missao_id} concluída. Resposta: `{resposta_aluno}` (+{xp_ganho} XP)")
             st.session_state[f"m_{conteudo_id}_{missao_id}"] = resposta_aluno
-            # Guarda TAMBÉM no banco (prog["respostas"], persistido por
-            # salvar_perfil_e_progresso): o session_state acima é só desta
-            # aba do navegador, some numa sessão nova. Sem isso, quem volta
-            # depois via outra sessão via as missões já feitas mostrando
-            # "(Resposta: None)" — bug relatado pelo Wenes (2026-09-14).
+            # Guarda TAMBÉM no banco (prog["respostas"], persistido por salvar_perfil_e_progresso): o session_state acima é só desta aba do navegador, some numa sessão nova. Sem isso, quem volta depois via outra sessão via as missões já feitas mostrando "(Resposta: None)".
             prog.setdefault("respostas", {})[str(missao_id)] = resposta_aluno
             salvar_perfil_e_progresso(nome_aluno, conteudo_id, perfil, prog)
             st.rerun()
@@ -2140,12 +1968,7 @@ def verificar_resposta(conteudo_id, missao_id, resposta_aluno, resposta_certa, p
             prog["erros"] = prog.get("erros", 0) + 1
             prog["erros_missao_atual"] = prog.get("erros_missao_atual", 0) + 1
             salvar_perfil_e_progresso(nome_aluno, conteudo_id, perfil, prog)
-            # Limpa o "🎉 Correto!" da missão anterior: sem isso, ele ficava
-            # em session_state pra sempre (só é sobrescrito num ACERTO) e
-            # aparecia junto do "❌ Resposta incorreta" da tentativa atual —
-            # as duas mensagens empilhadas, tumultuado (relatado pelo Wenes,
-            # 2026-09-14). Errar tem que apagar o acerto de antes, não só
-            # somar mais uma mensagem em cima.
+            # Limpa o "🎉 Correto!" da missão anterior: sem isso, ele ficava em session_state pra sempre (só é sobrescrito num ACERTO) e aparecia junto do "❌ Resposta incorreta" da tentativa atual — as duas mensagens empilhadas, tumultuado. Errar tem que apagar o acerto de antes, não só somar mais uma mensagem em cima.
             st.session_state.pop(f"ultimo_resultado_{conteudo_id}", None)
             st.error("❌ Resposta incorreta. Revise o conteúdo e tente de novo!")
 
@@ -2179,8 +2002,8 @@ def renderizar_flash_pendente():
     """Mostra (e consome) a mensagem guardada por flash(), se tiver alguma,
     como um card fixo no canto superior direito — não precisa rolar a tela
     pra ver, ao contrário de um st.success() desenhado no meio do formulário
-    (bug relatado pelo Wenes, 2026-09-17: editou um conteúdo longo, salvou, e
-    a mensagem ficou fora da tela, lá em cima). st.toast() faria a mesma
+    (caso típico: editar um conteúdo longo, salvar, e a mensagem ficar
+    fora da tela, lá em cima). st.toast() faria a mesma
     coisa nativamente, mas parou de funcionar neste ambiente."""
     mensagem = st.session_state.pop("_flash_pendente", None)
     if mensagem:
@@ -2205,7 +2028,7 @@ def render_placar_turma():
     consulta enxuta de ranking_turma(), a carga é desprezível.
 
     Mostrar o desempenho em público só é aceitável porque o aluno entra com
-    apelido (ver "O aluno entra com APELIDO" no CLAUDE.md): o objetivo não é
+    apelido: o objetivo não é
     anonimato, é não expor o nome de quem está atrás. Quem quiser se revelar,
     se revela — e isso vira parte da brincadeira."""
     placar = ranking_turma()
@@ -2239,8 +2062,8 @@ def renderizar_grade_cartoes(cartoes, prefixo_key):
     progresso} — on_click é uma função SEM argumento, chamada ao clicar no
     botão (varia: pode abrir uma matéria direto, ou abrir o hub de
     Estatística). "progresso" é opcional: uma string tipo "3/8" ou "✓" pra
-    mostrar quantas missões DAQUELE card específico já foram concluídas —
-    pedido do Wenes (2026-09-14), porque o "8/44" do menu lateral soma os 6
+    mostrar quantas missões DAQUELE card específico já foram concluídas.
+    Necessário porque o "8/44" do menu lateral soma os 6
     sub-temas de Estatística juntos e não dá pra saber, olhando só ali, quanto
     cada um já rendeu individualmente.
 
@@ -2254,12 +2077,7 @@ def renderizar_grade_cartoes(cartoes, prefixo_key):
             cor = PALETA_CORES_CARTAO[idx_global % len(PALETA_CORES_CARTAO)]
             with colunas[i]:
                 with st.container(border=True, key=f"{prefixo_key}_cartao_{idx_global}_cor_{cor}"):
-                    # Progresso na MESMA linha do título, texto simples (sem
-                    # badge colorido) — mesmo padrão já usado no menu lateral
-                    # ("📊 Estatística · 1/44"). Uma versão anterior usava um
-                    # badge numa linha própria, mas isso deixava o card mais
-                    # alto que o necessário só por causa de uma informação
-                    # curta — pedido do Wenes (2026-09-14).
+                    # Progresso na MESMA linha do título, texto simples (sem badge colorido) — mesmo padrão já usado no menu lateral ("📊 Estatística · 1/44"). Uma versão anterior usava um badge numa linha própria, mas isso deixava o card mais alto que o necessário só por causa de uma informação curta.
                     titulo_linha = f"#### {cartao['icone']} {cartao['titulo']}"
                     if cartao.get("progresso"):
                         titulo_linha += f"  ·  {cartao['progresso']}"
@@ -2326,12 +2144,7 @@ def render_pagina_inicial():
         </div>
         """, unsafe_allow_html=True)
 
-    # Dentro de um expander, FECHADO por padrão — quem tem curiosidade clica e
-    # vê, quem não tem, nem repara que existe (decisão de 2026-09-05, a pedido
-    # do usuário). Cada navegador é uma sessão isolada do Streamlit: o
-    # professor abrir ou fechar no notebook projetado no data show não afeta
-    # o que aparece no celular de nenhum aluno. Também ajuda com turma grande,
-    # onde a lista ficaria comprida antes do resto da página.
+    # Dentro de um expander, FECHADO por padrão — quem tem curiosidade clica e vê, quem não tem, nem repara que existe. Cada navegador é uma sessão isolada do Streamlit: o professor abrir ou fechar no notebook projetado no data show não afeta o que aparece no celular de nenhum aluno. Também ajuda com turma grande, onde a lista ficaria comprida antes do resto da página.
     with st.expander("🏆 Placar da Turma", expanded=False):
         render_placar_turma()
     st.write("")
@@ -2367,9 +2180,7 @@ def render_pagina_inicial():
     st.markdown("### 📚 Conteúdos disponíveis")
     st.caption("Clique para ir direto ao conteúdo.")
 
-    # Os 3 conteúdos nativos de Estatística viram UM cartão só ("📊 Estatística",
-    # desenhado à mão porque a ação dele é diferente: abre o hub, não uma
-    # matéria) — o resto vem dos conteúdos de verdade, via renderizar_grade_cartoes.
+    # Os 3 conteúdos nativos de Estatística viram UM cartão só ("📊 Estatística", desenhado à mão porque a ação dele é diferente: abre o hub, não uma matéria) — o resto vem dos conteúdos de verdade, via renderizar_grade_cartoes.
     cartoes = [{
         "icone": "📊", "titulo": "Estatística",
         "descricao": "Escolha o tema que você quer estudar.",
@@ -2393,8 +2204,7 @@ def render_pagina_estatistica():
     dados = st.session_state.dados_estatistica
     s = calcular_estatisticas(dados)
 
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("A Estatística Descritiva resume um conjunto de números em poucas medidas. "
                 "Nesta teoria, vamos calcular as principais medidas desta amostra:")
     st.info("**Dados:** " + " ".join(formatar_numero(x, 1) for x in dados))
@@ -2472,8 +2282,7 @@ def render_pagina_frequencia():
     dados = st.session_state.dados_estatistica
     freq = calcular_frequencia(dados)
 
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("Veja como transformar uma lista de números soltos numa tabela de frequência — e depois num gráfico, a forma mais comum de resumir os dados de uma pesquisa por amostragem.")
 
     st.write("---")
@@ -2527,7 +2336,7 @@ def grafico_barras_simples(categorias, valores, titulo_y):
     com Altair puro em vez de st.bar_chart. O st.bar_chart nativo do
     Streamlit prende o scroll do mouse quando o cursor está em cima dele —
     quem tenta rolar a página fica "preso" dando zoom no gráfico em vez de
-    descer a tela (bug relatado, confirmado só nele: os outros gráficos do
+    descer a tela (ocorre só nele: os outros gráficos do
     app já usam Altair puro, sem esse problema). Trocar por Altair aqui
     resolve, mantendo a mesma altura/largura dos demais."""
     df = pd.DataFrame({"Categoria": categorias, "Valor": valores})
@@ -2576,8 +2385,7 @@ def grafico_barras_eixo_controlado(categorias, valores, eixo_min, eixo_max, titu
 
 
 def render_pagina_leitura_grafica():
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("Nem todo gráfico ou pesquisa que aparece na internet, no jornal ou nas redes sociais está mostrando a informação de forma honesta. Aqui você aprende a desconfiar — e a checar — antes de acreditar numa manchete.")
 
     st.write("---")
@@ -2629,9 +2437,8 @@ def grafico_boxplot_manual(q):
     Largura própria, bem menor que LARGURA_GRAFICO: só existe UMA categoria
     ("Amostra") — na largura padrão (pensada pra 5 faixas ou 10 pontos de
     dispersão) a caixa ficava uma única barra grossa cercada de espaço vazio
-    dos dois lados, visivelmente desproporcional (reclamação do Wenes,
-    2026-09-14, confirmada ao vivo no navegador: caixa de 60px perdida no
-    meio de 380px). Reduzir largura E espessura da caixa/mediana deixa o
+    dos dois lados, visivelmente desproporcional (caixa de 60px perdida
+    no meio de 380px). Reduzir largura E espessura da caixa/mediana deixa o
     gráfico compacto em vez de esparramado, mesmo raciocínio já aplicado em
     LARGURA_DUAS_CATEGORIAS pro gráfico de Leitura Crítica."""
     LARGURA_UMA_CATEGORIA = 160
@@ -2658,8 +2465,7 @@ def render_pagina_comparacao_diagramas():
     q = calcular_quartis(dados)
     ramos = calcular_ramo_folhas(dados)
 
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("Os mesmos dados podem ser mostrados de formas diferentes — cada forma revela um aspecto diferente da amostra. Aqui você compara três: histograma, box-plot e ramos-e-folhas.")
 
     st.write("---")
@@ -2699,8 +2505,7 @@ def render_pagina_pesquisa_amostral():
     dados = st.session_state.dados_estatistica
     s = calcular_estatisticas(dados)
 
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("Antes de calcular qualquer coisa, uma pesquisa estatística começa com DECISÕES: o que perguntar, quem ouvir, e o que fazer com a resposta. Aqui você acompanha essas decisões, usando a amostra que o professor já coletou.")
 
     st.write("---")
@@ -2762,8 +2567,7 @@ def render_pagina_tendencia():
     xs, ys = TENDENCIA_HORAS_ESTUDO, TENDENCIA_NOTAS
     reta = calcular_reta_tendencia(xs, ys)
 
-    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os
-    # botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
+    # O título da matéria é desenhado pelo roteador (bloco 10), junto com os botões Teoria/Missões — aqui entra só o conteúdo da aba Teoria.
     st.markdown("Até agora cada item tinha UM número. E se tivesse DOIS, por exemplo horas de estudo e nota? Dá pra investigar se as duas coisas andam juntas.")
 
     st.write("---")
@@ -2803,8 +2607,7 @@ def render_pagina_conteudo_dinamico(conteudo):
         return
 
     # st.expander de verdade (o mesmo componente do conteúdo estático, não uma
-    # imitação) com expanded=True — já abre mostrando o conteúdo, mas o aluno
-    # pode recolher se quiser limpar a tela.
+    # imitação) com expanded=True — já abre mostrando o conteúdo, mas o aluno pode recolher se quiser limpar a tela.
     for i, secao in enumerate(secoes, start=1):
         with st.expander(f"{i}️⃣ {secao.get('titulo', '')}", expanded=True):
             st.markdown(secao.get("texto", ""))
@@ -2892,9 +2695,7 @@ def render_missoes_frequencia():
 
     st.info("**Amostra da Turma:** " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    # Missões 1 a FREQ_N_FAIXAS: uma por faixa, na ordem — cada uma pede a
-    # frequência absoluta de UMA faixa, igual ao "passo a passo" das 10
-    # missões nativas de Estatística Descritiva.
+    # Missões 1 a FREQ_N_FAIXAS: uma por faixa, na ordem — cada uma pede a frequência absoluta de UMA faixa, igual ao "passo a passo" das 10 missões nativas de Estatística Descritiva.
     for i, f in enumerate(faixas, start=1):
         rotulo = rotulo_faixa(f)
         if prog["missao_atual"] > i:
@@ -2904,9 +2705,7 @@ def render_missoes_frequencia():
             resp = st.number_input(f"Quantos itens da amostra estão entre {rotulo}?", step=1, value=None, key=f"in_{cid}_{i}")
             verificar_resposta(cid, i, resp, f["freq"], 20)
 
-    # Missão FREQ_N_FAIXAS+1: soma das frequências, tem que bater com o total
-    # da amostra — confirma que nenhum item ficou de fora, nenhum foi contado
-    # duas vezes (o mesmo raciocínio do expander "Ver Teoria" da aba Teoria).
+    # Missão FREQ_N_FAIXAS+1: soma das frequências, tem que bater com o total da amostra — confirma que nenhum item ficou de fora, nenhum foi contado duas vezes (o mesmo raciocínio do expander "Ver Teoria" da aba Teoria).
     idx_total = FREQ_N_FAIXAS + 1
     if prog["missao_atual"] > idx_total:
         st.success(f"✅ Missão {idx_total} Concluída! (Total: {st.session_state.get(f'm_{cid}_{idx_total}')})")
@@ -2927,10 +2726,7 @@ def render_missoes_frequencia():
         resp = st.number_input("Qual é a frequência relativa (%) dessa faixa?", step=0.1, value=None, key=f"in_{cid}_{idx_relativa}")
         verificar_resposta(cid, idx_relativa, resp, round(faixa_moda["freq_relativa"], 1), 30)
 
-    # Missão FREQ_N_FAIXAS+3 (última): fecha ligando a conta ao gráfico —
-    # leitura visual, não cálculo, por isso é múltipla escolha em vez de
-    # número digitado (mesmo tipo já usado nas missões dos conteúdos
-    # cadastrados pelo professor).
+    # Missão FREQ_N_FAIXAS+3 (última): fecha ligando a conta ao gráfico — leitura visual, não cálculo, por isso é múltipla escolha em vez de número digitado (mesmo tipo já usado nas missões dos conteúdos cadastrados pelo professor).
     idx_grafico = FREQ_N_FAIXAS + 3
     if prog["missao_atual"] > idx_grafico:
         st.success(f"🏆 PARABÉNS! Trilha concluída! (Faixa mais alta no gráfico: {st.session_state.get(f'm_{cid}_{idx_grafico}')})")
@@ -2951,14 +2747,9 @@ def render_missoes_leitura_grafica():
     cid = ID_CONTEUDO_LEITURA_GRAFICA
     diferenca_real = LEITURA_CASO1_VALORES[1] - LEITURA_CASO1_VALORES[0]
 
-    # Sem cabeçalho "Caso 1" aqui de propósito: nenhum outro conteúdo da
-    # Trilha tem sub-título antes da primeira missão, só "### 📍 Missão N" —
-    # esse cabeçalho quebrava esse padrão e confundia mais do que ajudava
-    # (relatado pelo Wenes, 2026-09-14).
+    # Sem cabeçalho "Caso 1" aqui de propósito: nenhum outro conteúdo da Trilha tem sub-título antes da primeira missão, só "### 📍 Missão N" — esse cabeçalho quebrava esse padrão e confundia mais do que ajudava.
     #
-    # O gráfico manipulado (eixo cortado) fica visível durante as 3 primeiras
-    # missões — é em cima dele que o aluno responde. Na missão 4, troca pelo
-    # gráfico honesto (eixo em 0), que é o que a última pergunta usa.
+    # O gráfico manipulado (eixo cortado) fica visível durante as 3 primeiras missões — é em cima dele que o aluno responde. Na missão 4, troca pelo gráfico honesto (eixo em 0), que é o que a última pergunta usa.
     if prog["missao_atual"] <= 3:
         grafico_barras_eixo_controlado(
             LEITURA_CASO1_CATEGORIAS, LEITURA_CASO1_VALORES,
@@ -3001,11 +2792,7 @@ def render_missoes_leitura_grafica():
         resp = st.number_input("Quantas unidades a mais o Produto B vendeu, de fato?", step=1, value=None, key=f"in_{cid}_4")
         verificar_resposta(cid, 4, resp, diferenca_real, 30)
 
-    # Sem cabeçalho "Caso 2" (mesmo motivo do Caso 1, acima) — e sem "---"
-    # separador também, que nenhum outro conteúdo usa entre missões. A
-    # manchete continua aparecendo, só que agora tratada como o gráfico lá
-    # de cima: visível SÓ enquanto for relevante (missões 5 a 8), não a
-    # trilha inteira depois disso.
+    # Sem cabeçalho "Caso 2" (mesmo motivo do Caso 1, acima) — e sem "---" separador também, que nenhum outro conteúdo usa entre missões. A manchete continua aparecendo, só que agora tratada como o gráfico lá de cima: visível SÓ enquanto for relevante (missões 5 a 8), não a trilha inteira depois disso.
     if 5 <= prog["missao_atual"] <= 8:
         st.info('**Manchete:** "Corredor@s aprovam o novo modelo!" — pesquisa feita com 8 pessoas, todas já fãs da marca nas redes sociais.')
 
@@ -3059,8 +2846,7 @@ def render_missoes_comparacao_diagramas():
 
     st.info("**Amostra da Turma:** " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    # Missões 1-3: os três números que formam o box-plot, um de cada vez —
-    # mesma lógica de "passo a passo" das outras missões nativas.
+    # Missões 1-3: os três números que formam o box-plot, um de cada vez — mesma lógica de "passo a passo" das outras missões nativas.
     if prog["missao_atual"] > 1: st.success(f"✅ Missão 1 Concluída! (Mediana: {st.session_state.get(f'm_{cid}_1')})")
     elif prog["missao_atual"] == 1:
         st.markdown('### 📍 Missão 1: O Centro (Mediana)')
@@ -3081,8 +2867,7 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input("Qual é o Q3?", step=0.1, value=None, key=f"in_{cid}_3")
         verificar_resposta(cid, 3, resp, q["q3"], 30)
 
-    # Missão 4: agora com os 3 números calculados, mostra o box-plot de
-    # verdade e pede pra ler o Q3 nele — fecha o ciclo conta -> gráfico.
+    # Missão 4: agora com os 3 números calculados, mostra o box-plot de verdade e pede pra ler o Q3 nele — fecha o ciclo conta -> gráfico.
     if prog["missao_atual"] == 4:
         grafico_boxplot_manual(q)
     if prog["missao_atual"] > 4: st.success(f"✅ Missão 4 Concluída! (Q3 no gráfico: {st.session_state.get(f'm_{cid}_4')})")
@@ -3091,9 +2876,7 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input("Olhando o box-plot acima, qual valor marca o TOPO da caixa (Q3)?", step=0.1, value=None, key=f"in_{cid}_4")
         verificar_resposta(cid, 4, resp, q["q3"], 20)
 
-    # Missão 5: ramos e folhas — contar quantos valores caem no ramo mais
-    # frequente (empate resolvido pelo primeiro ramo encontrado, mesmo
-    # critério já usado na faixa modal da Frequência).
+    # Missão 5: ramos e folhas — contar quantos valores caem no ramo mais frequente (empate resolvido pelo primeiro ramo encontrado, mesmo critério já usado na faixa modal da Frequência).
     ramo_mais_comum = max(ramos, key=lambda r: len(ramos[r]))
     if prog["missao_atual"] == 5:
         st.code(texto_ramo_folhas(ramos), language=None)
@@ -3103,9 +2886,7 @@ def render_missoes_comparacao_diagramas():
         resp = st.number_input(f"No diagrama acima, quantos valores tem o ramo {ramo_mais_comum}?", step=1, value=None, key=f"in_{cid}_5")
         verificar_resposta(cid, 5, resp, len(ramos[ramo_mais_comum]), 20)
 
-    # Missão 6 (última): fecha comparando os três diagramas de verdade, não
-    # só calculando — vai direto no "reconhecendo os mais eficientes pra cada
-    # análise" da própria habilidade EM13MAT409.
+    # Missão 6 (última): fecha comparando os três diagramas de verdade, não só calculando — vai direto no "reconhecendo os mais eficientes pra cada análise" da própria habilidade EM13MAT409.
     if prog["missao_atual"] > 6:
         st.success("🏆 PARABÉNS! Trilha concluída!")
     elif prog["missao_atual"] == 6:
@@ -3126,8 +2907,7 @@ def render_missoes_pesquisa_amostral():
 
     st.info(f"**Cenário:** você quer saber a nota média de Matemática de todos os alunos do Ensino Médio da escola, usando a amostra que o professor já coletou: " + " ".join(formatar_numero(x, 1) for x in dados))
 
-    # Missões 1-2: distinguir população de amostra no cenário dado — decisão
-    # conceitual, não conta, por isso são múltipla escolha.
+    # Missões 1-2: distinguir população de amostra no cenário dado — decisão conceitual, não conta, por isso são múltipla escolha.
     if prog["missao_atual"] > 1: st.success(f"✅ Missão 1 Concluída! (Resposta: {st.session_state.get(f'm_{cid}_1')})")
     elif prog["missao_atual"] == 1:
         st.markdown('### 📍 Missão 1: Qual é a População?')
@@ -3148,8 +2928,7 @@ def render_missoes_pesquisa_amostral():
         )
         verificar_resposta(cid, 2, resp, "Só a sua turma", 20, tipo="multipla")
 
-    # Missão 3: confirma o tamanho real da amostra — a única missão numérica
-    # do conteúdo, ligando a decisão conceitual a um número concreto.
+    # Missão 3: confirma o tamanho real da amostra — a única missão numérica do conteúdo, ligando a decisão conceitual a um número concreto.
     if prog["missao_atual"] > 3: st.success(f"✅ Missão 3 Concluída! (Tamanho da amostra: {st.session_state.get(f'm_{cid}_3')})")
     elif prog["missao_atual"] == 3:
         st.markdown('### 📍 Missão 3: O Tamanho da Amostra')
@@ -3167,8 +2946,7 @@ def render_missoes_pesquisa_amostral():
         )
         verificar_resposta(cid, 4, resp, "Qual é a nota média da turma em Matemática?", 20, tipo="multipla")
 
-    # Missões 5-6: separar tendência central de dispersão — o conteúdo do
-    # relatório que a habilidade pede explicitamente.
+    # Missões 5-6: separar tendência central de dispersão — o conteúdo do relatório que a habilidade pede explicitamente.
     if prog["missao_atual"] > 5: st.success(f"✅ Missão 5 Concluída! (Resposta: {st.session_state.get(f'm_{cid}_5')})")
     elif prog["missao_atual"] == 5:
         st.markdown('### 📍 Missão 5: Tendência Central')
@@ -3197,8 +2975,7 @@ def render_missoes_tendencia():
     prog = progresso_atual(ID_CONTEUDO_TENDENCIA)
     cid = ID_CONTEUDO_TENDENCIA
 
-    # O gráfico fica visível o tempo todo nas missões 1-3 (leitura/conceito);
-    # nas 4-5 (previsão) ele reaparece porque é nele que a resposta se lê.
+    # O gráfico fica visível o tempo todo nas missões 1-3 (leitura/conceito); nas 4-5 (previsão) ele reaparece porque é nele que a resposta se lê.
     if prog["missao_atual"] <= 5:
         grafico_dispersao_com_reta(xs, ys, reta, "Horas de Estudo", "Nota")
 
@@ -3270,8 +3047,7 @@ def render_missoes_dinamicas(conteudo):
             tipo = missao.get("tipo", "numero")
             if tipo == "multipla":
                 # index=None deixa a missão começar SEM alternativa marcada. Com a
-                # primeira já selecionada, o aluno poderia clicar em "Verificar"
-                # sem ter escolhido nada e levar um erro que não foi escolha dele.
+                # primeira já selecionada, o aluno poderia clicar em "Verificar" sem ter escolhido nada e levar um erro que não foi escolha dele.
                 resposta = st.radio(
                     "Escolha uma alternativa:", missao.get("alternativas", []),
                     index=None, key=f"in_{cid}_{idx}",
@@ -3299,8 +3075,8 @@ def hex_para_rgb(cor_hex):
 
 class _PDFComCabecalho(FPDF):
     """FPDF que desenha o timbre institucional (ARQUIVO_CABECALHO) só no topo
-    da PRIMEIRA página do relatório (decisão do Wenes, 2026-09-20: as demais
-    páginas ficam com o espaço todo para tabelas e gráficos).
+    da PRIMEIRA página do relatório (as demais páginas ficam com o espaço
+    todo para tabelas e gráficos).
 
     Continua sendo via header() e não um pdf.image() solto depois do
     add_page(): assim a primeira página sempre leva o timbre, e o fpdf2 cuida
@@ -3316,9 +3092,7 @@ class _PDFComCabecalho(FPDF):
         largura = self.w - self.l_margin - self.r_margin
         self.image(ARQUIVO_CABECALHO, x=self.l_margin, y=10, w=largura)
         # pdf.image() não move o cursor no fpdf2, então o Y de onde o conteúdo
-        # começa tem que ser calculado: a altura vem da proporção real do
-        # arquivo (lida com PIL, não chutada — trocar a arte por uma de outra
-        # proporção continua funcionando sem mexer no código).
+        # começa tem que ser calculado: a altura vem da proporção real do arquivo (lida com PIL, não chutada — trocar a arte por uma de outra proporção continua funcionando sem mexer no código).
         with Image.open(ARQUIVO_CABECALHO) as img:
             altura = largura * img.height / img.width
         self.set_y(10 + altura + 6)
@@ -3365,8 +3139,8 @@ LARGURA_ROTULO_CABECALHO_PDF = 32  # mm — cabe "Professor(a):" em negrito 10pt
 def _linha_dado_pdf(pdf, rotulo, valor):
     """Uma linha 'Rótulo: valor' alinhada à esquerda — rótulo em negrito com
     largura fixa, pra várias linhas seguidas alinharem o valor na mesma
-    coluna (padrão que o Wenes já usa nos documentos curtos de outras
-    disciplinas: Acadêmico / Curso / Disciplina / Professor / Data)."""
+    coluna (formato de documentos curtos: Acadêmico / Curso / Disciplina /
+    Professor / Data)."""
     pdf.set_font("CMU", 'B', 10)
     pdf.cell(LARGURA_ROTULO_CABECALHO_PDF, 6, text=f"{rotulo}:", align='L')
     pdf.set_font("CMU", '', 10)
@@ -3383,7 +3157,7 @@ def _grafico_barras_pdf(pdf, titulo, itens, x_tabela, largura_tabela):
 
     itens: lista de (rótulo, fração 0-1 da barra, texto do valor, cor hex).
 
-    Regras de página (pedido do Wenes, 2026-09-20):
+    Regras de página:
     - cabe no espaço que sobrou na página: fica onde está;
     - não cabe: começa numa página nova, e o gráfico ocupa só a(s) página(s)
       dele (quem chamou deve abrir outra página antes do próximo conteúdo);
@@ -3476,9 +3250,7 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
     largura_util = pdf.w - pdf.l_margin - pdf.r_margin  # 170mm em A4 com margens de 20mm
 
     # --- Dados do relatório (Instituição/Professor/Turma opcionais, Data sempre) ---
-    # Rótulo em negrito + dois pontos, alinhado à esquerda (pedido do Wenes,
-    # 2026-09-07) — é o padrão que ele já usa em documentos curtos de outras
-    # disciplinas. Substituiu o bloco centralizado que tinha antes.
+    # Rótulo em negrito + dois pontos, alinhado à esquerda, formato de documentos curtos. Substituiu o bloco centralizado que tinha antes.
     if nome_instituicao:
         _linha_dado_pdf(pdf, "Instituição", nome_instituicao)
     if nome_professor:
@@ -3495,26 +3267,10 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
     pdf.ln(4)
 
     # --- Tabela 1: Desempenho da turma ---
-    # Tabelas mais estreitas que a largura útil e centralizadas na página (em
-    # vez de esticadas de margem a margem) — fica com cara de tabela de
-    # relatório/artigo, não de planilha crua. pdf.cell() com new_x="LMARGIN"
-    # sempre volta pra margem esquerda da página no fim da linha, então cada
-    # linha precisa reposicionar o X pro início da tabela centralizada de novo.
-    # A coluna "Nome no Relatório" só entra se ALGUÉM tiver preenchido: professor
-    # que não usa o recurso continua recebendo o PDF de 3 colunas de sempre, sem
-    # uma coluna vazia ocupando espaço. Quem preencheu só metade da turma recebe
-    # as células dos outros em branco, de propósito — dá pra completar à caneta
-    # depois de imprimir. As larguras abaixo somam os MESMOS 150mm nos dois
-    # casos: o espaço da coluna nova sai da folga das colunas numéricas (45mm
-    # pra escrever "175" era exagero), não das margens, que ficam intocadas.
+    # Tabelas mais estreitas que a largura útil e centralizadas na página (em vez de esticadas de margem a margem) — fica com cara de tabela de relatório/artigo, não de planilha crua. pdf.cell() com new_x="LMARGIN" sempre volta pra margem esquerda da página no fim da linha, então cada linha precisa reposicionar o X pro início da tabela centralizada de novo. A coluna "Nome no Relatório" só entra se ALGUÉM tiver preenchido: professor que não usa o recurso continua recebendo o PDF de 3 colunas de sempre, sem uma coluna vazia ocupando espaço. Quem preencheu só metade da turma recebe as células dos outros em branco, de propósito — dá pra completar à caneta depois de imprimir. As larguras abaixo somam os MESMOS 150mm nos dois casos: o espaço da coluna nova sai da folga das colunas numéricas (45mm pra escrever "175" era exagero), não das margens, que ficam intocadas.
     usar_nome_relatorio = any(str(l.get("Nome no Relatório", "")).strip() for l in lista_geral)
 
-    # COM a coluna de nome a tabela ocupa a largura útil inteira (170mm, ou seja,
-    # exatamente de margem a margem) — os 20mm que sobravam de cada lado vão
-    # todos pra coluna do nome, que passa de 52 pra 72mm e para de cortar nome
-    # completo. SEM a coluna de nome ficam os 150mm centralizados de sempre: com
-    # 3 colunas curtas, esticar de margem a margem deixaria a tabela com cara de
-    # planilha esticada, e aí a folga é proposital (ver comentário abaixo).
+    # COM a coluna de nome a tabela ocupa a largura útil inteira (170mm, ou seja, exatamente de margem a margem) — os 20mm que sobravam de cada lado vão todos pra coluna do nome, que passa de 52 pra 72mm e para de cortar nome completo. SEM a coluna de nome ficam os 150mm centralizados de sempre: com 3 colunas curtas, esticar de margem a margem deixaria a tabela com cara de planilha esticada, e aí a folga é proposital (ver comentário abaixo).
     largura_tabela1 = largura_util if usar_nome_relatorio else 150  # 38+72+30+30 | 60+45+45
     x_tabela1 = pdf.l_margin + (largura_util - largura_tabela1) / 2
     pdf.set_font("CMU", 'B', 13)
@@ -3554,9 +3310,7 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
         grafico_xp_isolado = _grafico_barras_pdf(pdf, "Gráfico de XP por Aluno", itens_xp, x_tabela1, largura_tabela1)
 
     # --- Tabela de habilidades da BNCC (só se houver missão mapeada) ---
-    # Fica logo depois do Desempenho da Turma, ainda na primeira página quando
-    # cabe: é a tabela que responde "o que a turma aprendeu", enquanto as outras
-    # respondem "quanto cada aluno fez".
+    # Fica logo depois do Desempenho da Turma, ainda na primeira página quando cabe: é a tabela que responde "o que a turma aprendeu", enquanto as outras respondem "quanto cada aluno fez".
     if linhas_bncc:
         if grafico_xp_isolado:
             pdf.add_page()
@@ -3631,15 +3385,11 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
             pdf.set_text_color(0, 0, 0)
             pdf.ln(6)
 
-    # Desempenho da Turma (tabela + gráfico de XP) numa página, Detalhamento
-    # por Conteúdo (tabela + gráfico de %) começando limpo na próxima — em vez
-    # de deixar as duas seções disputarem espaço na mesma página e a quebra
-    # automática cair no meio de qualquer coisa.
+    # Desempenho da Turma (tabela + gráfico de XP) numa página, Detalhamento por Conteúdo (tabela + gráfico de %) começando limpo na próxima — em vez de deixar as duas seções disputarem espaço na mesma página e a quebra automática cair no meio de qualquer coisa.
     pdf.add_page()
 
     # --- Tabela 2: Detalhamento do conteúdo que o professor estava vendo ---
-    # Mesma regra da tabela 1: com nome vai de margem a margem (170mm) pra dar
-    # 68mm ao nome completo; sem nome, 150mm centralizados.
+    # Mesma regra da tabela 1: com nome vai de margem a margem (170mm) pra dar 68mm ao nome completo; sem nome, 150mm centralizados.
     largura_tabela2 = largura_util if usar_nome_relatorio else 150  # 38+68+26+20+18 | 50+30+40+30
     x_tabela2 = pdf.l_margin + (largura_util - largura_tabela2) / 2
     pdf.set_font("CMU", 'B', 13)
@@ -3648,11 +3398,7 @@ def gerar_pdf_relatorio(lista_geral, conteudo_titulo, linhas_conteudo, nome_inst
     pdf.set_font("CMU", 'B', 11)
     pdf.set_x(x_tabela2)
     if usar_nome_relatorio:
-        # 38+68+26+20+18 = 170 (largura útil inteira). A coluna de login tem os
-        # mesmos 38mm da tabela 1 de propósito: com 32mm um login comprido
-        # colidia com o nome da coluna vizinha (visto no teste). Cabeçalhos
-        # encurtados ("Total" em vez de "Total Missões") porque com 5 colunas o
-        # texto longo não cabe mais.
+        # 38+68+26+20+18 = 170 (largura útil inteira). A coluna de login tem os mesmos 38mm da tabela 1 de propósito: com 32mm um login comprido colidia com o nome da coluna vizinha (visto no teste). Cabeçalhos encurtados ("Total" em vez de "Total Missões") porque com 5 colunas o texto longo não cabe mais.
         pdf.cell(38, 9, text="Login", border=1, align='C')
         pdf.cell(68, 9, text="Aluno", border=1, align='C')
         pdf.cell(26, 9, text="Concluídas", border=1, align='C')
@@ -3811,13 +3557,11 @@ def renderizar_acerto_por_aluno_e_habilidade(alunos, conteudo_id=None):
         pcts = [_percentual_acerto(par) for par in pares]
         linhas_txt.append([("👥 " if rotulo == "Turma" else "") + rotulo] + [_texto_acerto(par) for par in pares])
         if rotulo == "Turma":
-            # A linha da turma tem cor própria (fundo cinza, texto azul escuro, sem verde/amarelo/vermelho),
-            # pra não ser confundida com um aluno.
+            # A linha da turma tem cor própria (fundo cinza, texto azul escuro, sem verde/amarelo/vermelho), pra não ser confundida com um aluno.
             linhas_css.append([ESTILO_LINHA_TURMA] * (len(pcts) + 1))
         else:
             linhas_css.append([""] + [_fundo_acerto(p) if p is not None else "" for p in pcts])
-    # Título de cada coluna com o total de missões da habilidade, pra dar a medida
-    # do "(acertos/tentativas)".
+    # Título de cada coluna com o total de missões da habilidade, pra dar a medida do "(acertos/tentativas)".
     total_missoes = {l["Habilidade"]: l["Missões"] for l in desempenho_por_bncc(alunos, conteudo_id)}
     titulos = [f"{h}" + chr(10) + f"({total_missoes[h]} missões)" if h in total_missoes else h for h in habilidades]
     df_txt = pd.DataFrame(linhas_txt, columns=["Aluno"] + titulos)
@@ -3879,10 +3623,7 @@ def renderizar_desempenho_por_habilidade(alunos, conteudo_id=None):
             "Concluído: missões feitas por todos os alunos, do total possível (missões × alunos)."
         )
         df_bncc = pd.DataFrame(linhas_bncc)
-        # Duas colunas (Conclusões, Possíveis) juntas numa só ("12/20"), do mesmo jeito
-        # que o PDF já mostra — eram números soltos aqui na tela, sem a fração que dá
-        # sentido a "Possíveis" (ver conversa de 2026-09-05: até o próprio autor do app
-        # leu a tabela e não conseguiu adivinhar o que "Possíveis 20" queria dizer).
+        # Duas colunas (Conclusões, Possíveis) juntas numa só ("12/20"), do mesmo jeito que o PDF já mostra — eram números soltos aqui na tela, sem a fração que dá sentido a "Possíveis" (sem a fração, não ficava claro o que "Possíveis 20" queria dizer).
         df_bncc_exibicao = df_bncc.copy()
         df_bncc_exibicao["Concluído"] = (
             df_bncc_exibicao["Conclusões"].astype(str) + "/" + df_bncc_exibicao["Possíveis"].astype(str)
@@ -3896,9 +3637,7 @@ def renderizar_desempenho_por_habilidade(alunos, conteudo_id=None):
                 x=alt.X("% Concluído:Q", scale=alt.Scale(domain=[0, 100])),
                 y=alt.Y("Habilidade:N", sort=None),
                 color=alt.Color("Cor:N", scale=alt.Scale(domain=CORES_DESEMPENHO, range=CORES_DESEMPENHO), legend=None),
-                # Tooltip explícito: sem isso, o Altair mostra também "Cor" (o
-                # hexadecimal da faixa de cor) e "_Cor_sort_index" (campo
-                # interno do Vega-Lite), que não dizem nada útil (2026-09-06).
+                # Tooltip explícito: sem isso, o Altair mostra também "Cor" (o hexadecimal da faixa de cor) e "_Cor_sort_index" (campo interno do Vega-Lite), que não dizem nada útil.
                 tooltip=[alt.Tooltip("Habilidade:N", title="Habilidade"), alt.Tooltip("% Concluído:Q", title="% Concluído")],
             ),
             use_container_width=True,
@@ -3915,9 +3654,7 @@ def render_desempenho_turma():
         st.info("Nenhum aluno iniciou a trilha ainda.")
         return
 
-    # Meta de XP: o professor define em Configurações; sem valor salvo
-    # ainda, cai pra metade do catálogo atual — um chute razoável de
-    # partida, que ele pode ajustar a qualquer momento.
+    # Meta de XP: o professor define em Configurações; sem valor salvo ainda, cai pra metade do catálogo atual — um chute razoável de partida, que ele pode ajustar a qualquer momento.
     _, _, xp_catalogo_total = xp_maximo_catalogo_atual()
     meta_xp = st.session_state.config.get("meta_xp") or (xp_catalogo_total / 2)
 
@@ -3925,14 +3662,7 @@ def render_desempenho_turma():
     for nome, perfil in alunos.items():
         erros_totais = sum(p.get("erros", 0) for p in perfil.get("progresso", {}).values())
         xp_total = perfil.get("xp_total", 0)
-        # Cor por FAIXA DE XP (ver cor_por_xp) — nesse gráfico o comprimento
-        # da barra já É o XP, então a cor precisa falar da mesma coisa que o
-        # comprimento, senão vira duas leituras diferentes disputando o
-        # mesmo desenho (confuso, relatado pelo Wenes, 2026-09-14). Reaproveita
-        # cor_por_percentual_concluido — a MESMA função/faixa (≥70% verde,
-        # 40-69% amarelo, <40% vermelho) que já colore os outros gráficos do
-        # painel — em vez de uma faixa própria só pra este gráfico: um
-        # critério só pro app inteiro, mais fácil de entender e de explicar.
+        # Cor por FAIXA DE XP (ver cor_por_xp) — nesse gráfico o comprimento da barra já É o XP, então a cor precisa falar da mesma coisa que o comprimento, senão vira duas leituras diferentes disputando o mesmo desenho (leitura confusa). Reaproveita cor_por_percentual_concluido — a MESMA função/faixa (≥70% verde, 40-69% amarelo, <40% vermelho) que já colore os outros gráficos do painel — em vez de uma faixa própria só pra este gráfico: um critério só pro app inteiro, mais fácil de entender e de explicar.
         pct_da_meta = min(xp_total / meta_xp * 100, 100) if meta_xp else 0
         lista_geral.append({
             "Aluno": nome, "Nome no Relatório": perfil.get("nome_relatorio", ""),
@@ -3941,8 +3671,7 @@ def render_desempenho_turma():
         })
 
     # ---------- Abas no topo: tudo abaixo segue a aba escolhida ----------
-    # "Geral" mostra a turma em todos os conteúdos (XP, exclusão de aluno, nomes do
-    # relatório); cada conteúdo mostra só os dados dele, e o PDF sai da aba dele.
+    # "Geral" mostra a turma em todos os conteúdos (XP, exclusão de aluno, nomes do relatório); cada conteúdo mostra só os dados dele, e o PDF sai da aba dele.
     # on_change="rerun": só a aba aberta é calculada e enviada (as outras ficam vazias).
     ids_conteudo = list(st.session_state.conteudos.keys())
     labels_abas = ["📊 Geral"] + [f"{st.session_state.conteudos[cid]['icone']} {st.session_state.conteudos[cid]['titulo']}" for cid in ids_conteudo]
@@ -3958,8 +3687,7 @@ def render_desempenho_turma():
             colunas_visiveis = ["Aluno", "XP Total", "Erros Totais"]
             if df_geral["Nome no Relatório"].str.strip().any():
                 colunas_visiveis.insert(1, "Nome no Relatório")
-            # Tabela em HTML (título em negrito, como as outras). A exclusão deixou de ser
-            # por caixinha na tabela e passou a ser por lista de nomes, logo acima dela.
+            # Tabela em HTML (título em negrito, como as outras). A exclusão deixou de ser por caixinha na tabela e passou a ser por lista de nomes, logo acima dela.
             tabela_centralizada(df_geral[colunas_visiveis])
             with espaco_botao_excluir:
                 col_nomes, col_botao = st.columns([4, 1], vertical_alignment="bottom")
@@ -3975,8 +3703,7 @@ def render_desempenho_turma():
                     if st.button(rotulo, key="btn_excluir_selecionados", disabled=not nomes_marcados, use_container_width=True):
                         _dialog_confirmar_exclusao_alunos(nomes_marcados)
 
-            # Editor num expander separado, e NÃO um st.data_editor no lugar da tabela
-            # acima: aquela tabela usa on_select pra escolher o aluno a excluir, e
+            # Editor num expander separado, e NÃO um st.data_editor no lugar da tabela acima: aquela tabela usa on_select pra escolher o aluno a excluir, e
             # st.data_editor não tem seleção de linha — trocar uma pela outra mataria
             # o botão de excluir aluno individual.
             with st.expander("✏️ Nomes para o relatório (opcional)"):
@@ -4003,10 +3730,7 @@ def render_desempenho_turma():
                     flash("Salvo com sucesso!")
                     st.rerun()
 
-            # Cor por faixa de % de missões concluídas (verde/amarelo/vermelho), somando
-            # todos os conteúdos — mesma lógica e mesma técnica (Altair com domain==range)
-            # do gráfico de "Detalhamento por Conteúdo", pra não reintroduzir o bug de
-            # cor trocada do st.bar_chart(..., color=coluna).
+            # Cor por faixa de % de missões concluídas (verde/amarelo/vermelho), somando todos os conteúdos — mesma lógica e mesma técnica (Altair com domain==range) do gráfico de "Detalhamento por Conteúdo", pra não reintroduzir o bug de cor trocada do st.bar_chart(..., color=coluna).
             grafico_geral = (
                 alt.Chart(df_geral)
                 .mark_bar()
@@ -4014,12 +3738,7 @@ def render_desempenho_turma():
                     x=alt.X("XP Total:Q"),
                     y=alt.Y("Aluno:N", sort=None),
                     color=alt.Color("Cor:N", scale=alt.Scale(domain=CORES_DESEMPENHO, range=CORES_DESEMPENHO), legend=None),
-                    # Sem isso, o Altair mostra TODOS os campos codificados no tooltip
-                    # ao passar o mouse — incluindo "Cor" (o hexadecimal por trás da
-                    # faixa verde/amarelo/vermelho) e "_Cor_sort_index" (campo interno
-                    # que o Vega-Lite cria sozinho pra ordenar a escala de cor). Nenhum
-                    # dos dois diz algo útil pro professor; a lista explícita abaixo
-                    # restringe o tooltip só ao que interessa.
+                    # Sem isso, o Altair mostra TODOS os campos codificados no tooltip ao passar o mouse — incluindo "Cor" (o hexadecimal por trás da faixa verde/amarelo/vermelho) e "_Cor_sort_index" (campo interno que o Vega-Lite cria sozinho pra ordenar a escala de cor). Nenhum dos dois diz algo útil pro professor; a lista explícita abaixo restringe o tooltip só ao que interessa.
                     tooltip=[alt.Tooltip("Aluno:N", title="Aluno"), alt.Tooltip("XP Total:Q", title="XP Total")],
                 )
             )
@@ -4040,8 +3759,7 @@ def render_desempenho_turma():
             linhas = []
             for nome, perfil in alunos.items():
                 prog = perfil.get("progresso", {}).get(cid, {"missao_atual": 1, "erros": 0})
-                # missao_atual aponta pra próxima missão a responder (começa em 1);
-                # "concluídas" é sempre missao_atual - 1, com limite no total.
+                # missao_atual aponta pra próxima missão a responder (começa em 1); "concluídas" é sempre missao_atual - 1, com limite no total.
                 concluidas = max(prog["missao_atual"] - 1, 0)
                 concluidas = min(concluidas, total) if total else concluidas
                 linhas.append({"Aluno": nome, "Nome no Relatório": perfil.get("nome_relatorio", ""),
@@ -4058,12 +3776,7 @@ def render_desempenho_turma():
                 df_conteudo["% Concluído"] = (df_conteudo["Missões Concluídas"] / total * 100).round(0)
                 df_conteudo["Cor"] = df_conteudo["% Concluído"].apply(cor_por_percentual_concluido)
                 # st.bar_chart(..., color="Cor") passava por aqui antes, mas o Vega-Lite
-                # (motor por trás) às vezes trocava verde por amarelo — ele monta a
-                # ordem das cores sozinho a partir dos valores únicos da coluna, e essa
-                # ordem podia não bater com a ordem em que os dados aparecem. Usando
-                # Altair direto com domain==range idênticos, cada cor sempre mapeia
-                # pra ela mesma não importa a ordem que o Vega-Lite decidir usar por
-                # baixo dos panos.
+                # (motor por trás) às vezes trocava verde por amarelo — ele monta a ordem das cores sozinho a partir dos valores únicos da coluna, e essa ordem podia não bater com a ordem em que os dados aparecem. Usando Altair direto com domain==range idênticos, cada cor sempre mapeia pra ela mesma não importa a ordem que o Vega-Lite decidir usar por baixo dos panos.
                 grafico = (
                     alt.Chart(df_conteudo)
                     .mark_bar()
@@ -4071,17 +3784,13 @@ def render_desempenho_turma():
                         x=alt.X("% Concluído:Q"),
                         y=alt.Y("Aluno:N", sort=None),
                         color=alt.Color("Cor:N", scale=alt.Scale(domain=CORES_DESEMPENHO, range=CORES_DESEMPENHO), legend=None),
-                        # Tooltip explícito, mesmo motivo dos outros dois gráficos de
-                        # barra colorida por faixa (2026-09-06): sem isso, "Cor" e
-                        # "_Cor_sort_index" (interno do Vega-Lite) apareciam à toa.
+                        # Tooltip explícito, mesmo motivo dos outros dois gráficos de barra colorida por faixa: sem isso, "Cor" e "_Cor_sort_index" (interno do Vega-Lite) apareciam à toa.
                         tooltip=[alt.Tooltip("Aluno:N", title="Aluno"), alt.Tooltip("% Concluído:Q", title="% Concluído")],
                     )
                 )
                 st.altair_chart(grafico, use_container_width=True)
 
-            # O PDF só é gerado quando o professor clica em Exportar (data recebe uma
-            # função, não os bytes). Antes eram gerados os 10 PDFs, um por aba, a cada
-            # troca de página, e a tela ficava velha e apagada esperando.
+            # O PDF só é gerado quando o professor clica em Exportar (data recebe uma função, não os bytes). Antes eram gerados os 10 PDFs, um por aba, a cada troca de página, e a tela ficava velha e apagada esperando.
             gerar_este_pdf = functools.partial(
                 gerar_pdf_relatorio,
                 lista_geral, conteudo_info["titulo"], linhas,
@@ -4131,7 +3840,7 @@ def mover_conteudo(cid, direcao):
     """Sobe (direcao=-1) ou desce (direcao=+1) um conteúdo CADASTRADO PELO
     PROFESSOR uma posição — só entre si, nunca em relação aos nativos.
 
-    Regra final, confirmada pelo Wenes (2026-09-14) depois de duas voltas:
+    Regra:
     os nativos são conteúdo FIXO e PADRÃO — sem seta nenhuma, nem pra cima
     nem pra baixo — e ficam sempre agrupados no topo (ver a normalização em
     carregar_conteudos()); todo conteúdo cadastrado pelo professor vem
@@ -4158,11 +3867,7 @@ def render_gerenciar_conteudos():
     st.session_state.setdefault("editando_conteudo_id", None)
     st.session_state.setdefault("mostrar_form_conteudo", False)
 
-    # Fica ANTES da lista de cards, não depois — pedido do Wenes (2026-09-14).
-    # Faz sentido: esses dados alimentam 4 conteúdos nativos ao mesmo tempo
-    # (Estatística Descritiva, Frequência, Comparando Diagramas e Planejando
-    # uma Pesquisa usam a MESMA amostra, ver dados_estatistica), não é algo
-    # ligado só a um card — e é a ação mais usada antes de uma aula nova.
+    # Fica ANTES da lista de cards, não depois. Faz sentido: esses dados alimentam 4 conteúdos nativos ao mesmo tempo (Estatística Descritiva, Frequência, Comparando Diagramas e Planejando uma Pesquisa usam a MESMA amostra, ver dados_estatistica), não é algo ligado só a um card — e é a ação mais usada antes de uma aula nova.
     with st.expander("📝 Editar dados numéricos do conteúdo de Estatística"):
         dados_atuais_str = " ".join(str(x).replace('.', ',') for x in st.session_state.dados_estatistica)
         novo_input_dados = st.text_area("Dados de Estatística (separados por espaço):", value=dados_atuais_str)
@@ -4177,12 +3882,7 @@ def render_gerenciar_conteudos():
             except ValueError:
                 st.error("⚠️ Formato inválido! Digite apenas números separados por espaço.")
 
-    # Antes tinha UM título geral ("📚 Conteúdos Cadastrados") cobrindo os
-    # nativos e os cadastrados juntos, o que não fazia sentido pros nativos
-    # (ninguém "cadastrou" eles). Virou dois subtítulos, um por grupo — no
-    # MESMO estilo de destaque (st.subheader) que aquele título tinha, e
-    # reaproveitando o vocabulário já usado na barra lateral ("Matéria
-    # Padrão" / "Matérias Cadastradas") — pedido do Wenes, 2026-09-14.
+    # Antes tinha UM título geral ("📚 Conteúdos Cadastrados") cobrindo os nativos e os cadastrados juntos, o que não fazia sentido pros nativos (ninguém "cadastrou" eles). Virou dois subtítulos, um por grupo — no MESMO estilo de destaque (st.subheader) que aquele título tinha, e reaproveitando o vocabulário já usado na barra lateral ("Matéria Padrão" / "Matérias Cadastradas").
     nativos_em_ordem = [k for k, v in st.session_state.conteudos.items() if v["tipo"] == "estatico"]
     dinamicos_em_ordem = [k for k, v in st.session_state.conteudos.items() if v["tipo"] != "estatico"]
 
@@ -4226,27 +3926,18 @@ def render_gerenciar_conteudos():
 
             badges = []
             if c["tipo"] == "estatico":
-                # "Padrão", não "Nativo do sistema" — a seção logo acima já
-                # se chama "Matéria Padrão"; usar uma palavra diferente aqui
-                # pra dizer a MESMA coisa só confundia (apontado pelo Wenes
-                # com print, 2026-09-17). Um termo só, usado em todo canto.
+                # "Padrão", não "Nativo do sistema" — a seção logo acima já se chama "Matéria Padrão"; usar uma palavra diferente aqui pra dizer a MESMA coisa só confundia. Um termo só, usado em todo canto.
                 badges.append('<span class="badge-conteudo badge-conteudo-tipo">⚙️ Conteúdo Padrão</span>')
             else:
                 n_missoes = len(c.get("missoes", []))
                 badges.append(f'<span class="badge-conteudo badge-conteudo-tipo">🧩 {n_missoes} missão(ões)</span>')
-            # Total de XP do conteúdo (acertando tudo de primeira) — pedido
-            # do Wenes (2026-09-17): sem isso, ele tinha que abrir cada
-            # missão e somar o XP na mão pra saber quanto vale um conteúdo
-            # inteiro, e errava a conta (supôs 20 XP por missão em todas,
-            # quando na real varia entre 10 e 80 dependendo da missão).
+            # Total de XP do conteúdo (acertando tudo de primeira): sem isso, seria preciso abrir cada missão e somar o XP na mão pra saber quanto vale um conteúdo inteiro (varia entre 10 e 80 por missão).
             badges.append(f'<span class="badge-conteudo badge-conteudo-tipo">💯 Total {xp_maximo_de_conteudo(cid, c)} XP</span>')
             habilidades = habilidades_bncc_do_conteudo(cid, c)
             if habilidades:
                 badges.append(f'<span class="badge-conteudo badge-conteudo-bncc">🎯 BNCC: {", ".join(habilidades)}</span>')
             st.markdown(" ".join(badges), unsafe_allow_html=True)
-            # Legenda de cada habilidade (código + começo da descrição oficial), pra o
-            # professor não ter que decorar o que significa cada código da BNCC.
-            # Só as que têm descrição no banco: o código das demais já está no selo acima.
+            # Legenda de cada habilidade (código + começo da descrição oficial), pra o professor não ter que decorar o que significa cada código da BNCC. Só as que têm descrição no banco: o código das demais já está no selo acima.
             com_descricao = [h for h in habilidades if descricao_curta_bncc(h)]
             for hab in com_descricao:
                 st.caption(f"🎯 **{hab}** · {descricao_curta_bncc(hab, limite=170)}")
@@ -4264,11 +3955,7 @@ def render_gerenciar_conteudos():
     st.markdown('<div id="ancora-form-conteudo"></div>', unsafe_allow_html=True)
     st.markdown("---")
 
-    # O formulário (criar ou editar) só aparece quando pedido — clicar em
-    # "Editar" já liga isso sozinho; pra criar do zero, precisa desse botão.
-    # Antes o formulário ficava sempre visível embaixo da lista, então
-    # "Cancelar" só limpava os campos em vez de fazer a caixa toda sumir —
-    # confuso, parecia que tinha ficado alguma coisa pra trás esperando.
+    # O formulário (criar ou editar) só aparece quando pedido — clicar em "Editar" já liga isso sozinho; pra criar do zero, precisa desse botão. Antes o formulário ficava sempre visível embaixo da lista, então "Cancelar" só limpava os campos em vez de fazer a caixa toda sumir — confuso, parecia que tinha ficado alguma coisa pra trás esperando.
     if not st.session_state.mostrar_form_conteudo:
         if st.button("➕ Criar Novo Conteúdo"):
             st.session_state.mostrar_form_conteudo = True
@@ -4281,10 +3968,7 @@ def render_gerenciar_conteudos():
         st.subheader(f"✏️ Editando: {conteudo_original.get('icone', '')} {conteudo_original.get('titulo', '')}")
         st.caption("Altere o que quiser abaixo — título, teoria, missões — e clique em Salvar. "
                    "Os campos já vieram preenchidos com o que existe hoje.")
-        # Ao clicar em "Editar" na lista lá em cima, o formulário reaparece
-        # aqui embaixo sem nenhum aviso — quem clicou fica sem saber que
-        # precisa rolar a tela pra achar. Rola a tela sozinha até aqui, pra
-        # não repetir o mesmo problema da caixa de exclusão de antes.
+        # Ao clicar em "Editar" na lista lá em cima, o formulário reaparece aqui embaixo sem nenhum aviso — quem clicou fica sem saber que precisa rolar a tela pra achar. Rola a tela sozinha até aqui, pra não repetir o mesmo problema da caixa de exclusão de antes.
         components.html(
             """
             <script>
@@ -4369,8 +4053,7 @@ def render_gerenciar_conteudos():
                         f"Pontos (XP) {i + 1}", min_value=1, value=int(missao.get("pontos", 10)),
                         step=1, key=f"edit_pontos_missao_{i}",
                     ))
-                # Fora de st.form, então aqui dá pra mostrar o campo só quando o
-                # tipo escolhido é múltipla escolha.
+                # Fora de st.form, então aqui dá pra mostrar o campo só quando o tipo escolhido é múltipla escolha.
                 if missao["tipo"] == "multipla":
                     texto_alts = st.text_area(
                         f"Alternativas {i + 1} — uma por linha",
@@ -4387,8 +4070,7 @@ def render_gerenciar_conteudos():
                             "não está entre as alternativas. O aluno não teria como acertar."
                         )
                 elif "alternativas" in missao:
-                    # Trocou de múltipla escolha para outro tipo: as alternativas
-                    # antigas não valem mais e não devem ir para o conteudos.json.
+                    # Trocou de múltipla escolha para outro tipo: as alternativas antigas não valem mais e não devem ir para o conteudos.json.
                     del missao["alternativas"]
                 missao["bncc"] = campo_habilidade_bncc(
                     f"Habilidade BNCC {i + 1} (opcional)", valor_atual=missao.get("bncc", ""),
@@ -4420,9 +4102,7 @@ def render_gerenciar_conteudos():
             )
         with col_p:
             pontos_missao = st.number_input("Pontos (XP)", min_value=1, value=10, step=1)
-        # O campo de alternativas fica sempre visível, mesmo quando o tipo não é
-        # múltipla escolha: dentro de um st.form os widgets não disparam rerun,
-        # então não há como mostrá-lo só depois que o professor escolhe o tipo.
+        # O campo de alternativas fica sempre visível, mesmo quando o tipo não é múltipla escolha: dentro de um st.form os widgets não disparam rerun, então não há como mostrá-lo só depois que o professor escolhe o tipo.
         alternativas_missao = st.text_area(
             "Alternativas (só para múltipla escolha) — uma por linha",
             placeholder="média\nmediana\nmoda",
@@ -4441,10 +4121,7 @@ def render_gerenciar_conteudos():
             if not (titulo_missao and pergunta_missao and resposta_missao):
                 erro_missao = "Preencha o título, a pergunta e a resposta correta."
             elif tipo_missao == "multipla":
-                # Validado no cadastro, e não na hora da aula: uma missão de
-                # múltipla escolha sem alternativas, ou cuja resposta correta não
-                # está entre elas, viraria uma questão impossível de acertar —
-                # e o professor só descobriria com o aluno travado na frente.
+                # Validado no cadastro, e não na hora da aula: uma missão de múltipla escolha sem alternativas, ou cuja resposta correta não está entre elas, viraria uma questão impossível de acertar — e o professor só descobriria com o aluno travado na frente.
                 if len(alternativas) < 2:
                     erro_missao = "Múltipla escolha precisa de pelo menos duas alternativas, uma por linha."
                 elif resposta_missao.strip() not in alternativas:
@@ -4477,11 +4154,7 @@ def render_gerenciar_conteudos():
         for campo in ("novo_titulo_conteudo", "novo_icone_conteudo", "nova_descricao_conteudo"):
             st.session_state.pop(campo, None)
 
-    # Colunas estreitas (não st.columns(2), que divide a largura toda ao
-    # meio): aqui o formulário ocupa a página inteira, não um modal estreito
-    # como nos diálogos de exclusão — com 50/50 o Cancelar ficava largado no
-    # meio da tela, sem nenhuma relação visual com o Salvar (relatado pelo
-    # Wenes, 2026-09-17). Os dois ficam colados, junto da ação principal.
+    # Colunas estreitas (não st.columns(2), que divide a largura toda ao meio): aqui o formulário ocupa a página inteira, não um modal estreito como nos diálogos de exclusão — com 50/50 o Cancelar ficava largado no meio da tela, sem nenhuma relação visual com o Salvar. Os dois ficam colados, junto da ação principal.
     col_salvar, col_cancelar, _ = st.columns([1, 1, 4])
     with col_salvar:
         if st.button("💾 Salvar", type="primary", key="salvar_conteudo_btn"):
@@ -4549,11 +4222,8 @@ def render_configuracoes():
         "abaixo de 40% fica vermelho."
     )
     xp_nativo_hoje, xp_cadastrado_hoje, xp_catalogo_hoje = xp_maximo_catalogo_atual()
-    # Dois números separados, não um total misturado — o Wenes achou
-    # confuso um valor só somando Matéria Padrão + Matérias Cadastradas
-    # (2026-09-17): sem separar, não dá pra saber quanto vem de cada grupo.
-    # Cards com cor suave (ver .resumo-xp-card no CSS) em vez de
-    # st.metric() puro, que ele achou feio pro painel (2026-09-17).
+    # Dois números separados, não um total misturado: sem separar Matéria Padrão de Matérias Cadastradas, não dá pra saber quanto vem de cada grupo. Cards com cor suave (ver .resumo-xp-card no CSS) em vez de
+    # st.metric() puro.
     col_xp_nativo, col_xp_cadastrado, col_xp_total = st.columns(3)
     with col_xp_nativo:
         st.markdown(
@@ -4577,31 +4247,14 @@ def render_configuracoes():
             unsafe_allow_html=True,
         )
 
-    # Seletor de conteúdo — sugestão do orientador ("Conversar com
-    # orientador 02.txt", 2026-09-17): o professor escolhe a disciplina do
-    # dia e vê o XP dela. Fora do form de propósito — precisa rerodar assim
-    # que troca a escolha, pra atualizar o campo de meta antes de clicar
-    # Salvar; widget de form só atualiza no submit, o que travaria isso.
+    # Seletor de conteúdo: o professor escolhe a disciplina do dia e vê o XP dela. Fora do form de propósito — precisa rerodar assim que troca a escolha, pra atualizar o campo de meta antes de clicar Salvar; widget de form só atualiza no submit, o que travaria isso.
     opcoes_conteudo = {"__catalogo__": "— Catálogo inteiro (todos os conteúdos) —"}
     opcoes_conteudo.update({cid: c["titulo"] for cid, c in st.session_state.conteudos.items()})
     opcoes_ids = list(opcoes_conteudo.keys())
 
-    # Lembra a última escolha no PRÓPRIO config_sistema.json, não só em
-    # session_state: session_state morre inteiro com um F5 de verdade (é
-    # uma sessão nova pro Streamlit), então guardar só na sessão fazia a
-    # escolha "sobreviver a trocar de aba" mas sumir de novo ao atualizar a
-    # página — reportado pelo Wenes (2026-09-17). meta_xp já é salvo em
-    # disco por esse mesmo arquivo; o foco escolhido segue o mesmo caminho.
+    # Lembra a última escolha no PRÓPRIO config_sistema.json, não só em session_state: session_state morre inteiro com um F5 de verdade (é uma sessão nova pro Streamlit), então guardar só na sessão fazia a escolha "sobreviver a trocar de aba" mas sumir de novo ao atualizar a página. meta_xp já é salvo em disco por esse mesmo arquivo; o foco escolhido segue o mesmo caminho.
     #
-    # O widget usa key= e NÃO recebe index= — as duas coisas juntas foram a
-    # causa de um bug sério, também relatado pelo Wenes (2026-09-17,
-    # descrito com muito detalhe): trocar a escolha sem clicar Salvar fazia
-    # a seleção "oscilar", voltando pra anterior a cada segunda troca.
-    # Calcular index=... a partir de um valor que a MESMA rodada do script
-    # também escreve de volta em session_state cria uma corrida — o
-    # Streamlit não consegue distinguir com segurança "isso é o clique novo
-    # do usuário" de "isso é só o padrão que acabei de recalcular", e às
-    # vezes descarta o clique. Com key= só, o valor mora inteiramente em
+    # O widget usa key= e NÃO recebe index= — as duas coisas juntas foram a causa de um bug: trocar a escolha sem clicar Salvar fazia a seleção "oscilar", voltando pra anterior a cada segunda troca. Calcular index=... a partir de um valor que a MESMA rodada do script também escreve de volta em session_state cria uma corrida — o Streamlit não consegue distinguir com segurança "isso é o clique novo do usuário" de "isso é só o padrão que acabei de recalcular", e às vezes descarta o clique. Com key= só, o valor mora inteiramente em
     # st.session_state[key] e o Streamlit cuida de tudo sozinho, sem essa
     # corrida — é o padrão mais robusto pra widget com estado.
     if "meta_xp_foco_selecionado" not in st.session_state:
@@ -4625,12 +4278,7 @@ def render_configuracoes():
         st.caption(f"💡 \"{opcoes_conteudo[conteudo_foco]}\" vale até **{xp_referencia} XP** — já preenchido abaixo. Reduza se quiser uma meta mais fácil.")
         valor_padrao_meta = xp_referencia
 
-    # key inclui o conteúdo escolhido de propósito: assim, trocar a escolha
-    # no seletor acima cria um widget "novo" pro Streamlit, que preenche de
-    # novo com valor_padrao_meta — sem isso, o campo manteria o número
-    # digitado antes mesmo depois de trocar de conteúdo (pedido do Wenes,
-    # 2026-09-17: quer o campo preenchendo sozinho a cada troca, e editável
-    # se ele quiser uma meta menor do que o total).
+    # key inclui o conteúdo escolhido de propósito: assim, trocar a escolha no seletor acima cria um widget "novo" pro Streamlit, que preenche de novo com valor_padrao_meta — sem isso, o campo manteria o número digitado antes mesmo depois de trocar de conteúdo (o campo preenche sozinho a cada troca, e continua editável para uma meta menor que o total).
     with st.form("form_meta_xp"):
         meta_xp_input = st.number_input(
             "Meta de XP (referência pra colorir o gráfico)",
@@ -4686,26 +4334,15 @@ def render_configuracoes():
 # Ordem fixa, sempre os mesmos blocos, sempre nas mesmas posições:
 #   cabeçalho/Início (a própria marca) > identidade (altura reservada) >
 #   Matérias > Professor.
-# Nada aparece e some conforme a página, e o bloco de identidade tem altura
-# mínima fixa no CSS justamente pra que logar/deslogar não empurre o menu
-# inteiro pra baixo — o Streamlit desenha de cima pra baixo, então qualquer
-# bloco condicional acima da navegação move tudo que vem depois.
+# Nada aparece e some conforme a página, e o bloco de identidade tem altura mínima fixa no CSS justamente pra que logar/deslogar não empurre o menu inteiro pra baixo — o Streamlit desenha de cima pra baixo, então qualquer bloco condicional acima da navegação move tudo que vem depois.
 with st.sidebar:
-    # Botão "🏠 Início" bem no topo, ACIMA da logo — pedido explícito do Wenes
-    # (2026-09-14), mesmo já existindo um segundo caminho pro mesmo lugar (a
-    # logo/título logo abaixo, também clicável). Os dois juntos não são
-    # redundância por engano: é o mesmo padrão que existe em muito site/app
-    # por aí (ex.: YouTube tem o logo clicável E um item "Início" à parte,
-    # com ícone de casa) — reforça o mesmo destino por dois caminhos.
+    # Botão "🏠 Início" no topo, acima da logo. A logo/título logo abaixo também leva à Início: dois caminhos para o mesmo destino.
     if st.button("🏠  Início", key="nav_inicio", use_container_width=True,
                  type="primary" if st.session_state.pagina == PAGINA_INICIO else "secondary"):
         st.session_state.pagina = PAGINA_INICIO
         st.rerun()
 
-    # A logo/título TAMBÉM leva pra Início ao clicar — é o segundo caminho
-    # citado acima. Streamlit não deixa um st.image() disparar clique; por
-    # isso quem carrega a ação é o texto do título, estilizado por CSS (ver
-    # ".st-key-nav_titulo_inicio") pra não parecer um botão comum.
+    # A logo/título TAMBÉM leva pra Início ao clicar — é o segundo caminho citado acima. Streamlit não deixa um st.image() disparar clique; por isso quem carrega a ação é o texto do título, estilizado por CSS (ver ".st-key-nav_titulo_inicio") pra não parecer um botão comum.
     with st.container(key="sidebar_cabecalho"):
         if os.path.exists(ARQUIVO_LOGO):
             st.image(ARQUIVO_LOGO, width=69)  # 69 e não 64: o SVG tem um anel cinza por fora, e com 69 o círculo azul fica do tamanho de antes
@@ -4722,23 +4359,9 @@ with st.sidebar:
                 st.session_state.aluno_ativo = ""
                 st.rerun()
         else:
-            # "Apelido no jogo", não "Nome do Aluno": entrar com um nome
-            # inventado é parte da dinâmica, não um detalhe técnico. O aluno joga
-            # sem se expor quando erra, e é o professor que liga o apelido ao
-            # nome real, na hora do relatório (ver 'Nomes para o relatório').
+            # "Apelido no jogo", não "Nome do Aluno": entrar com um nome inventado é parte da dinâmica, não um detalhe técnico. O aluno joga sem se expor quando erra, e é o professor que liga o apelido ao nome real, na hora do relatório (ver 'Nomes para o relatório').
             #
-            # Em st.form (2026-09-07): sem form, o texto digitado só é
-            # sincronizado com o backend no blur/Enter do campo, num evento
-            # separado do clique do botão — clicar em "Acessar" logo depois de
-            # digitar podia disparar o rerun do botão ANTES desse sync chegar,
-            # e o clique via nome_digitado vazio, sem erro nenhum na tela
-            # (só um F5 — que força tudo a sincronizar de novo — resolvia). O
-            # form agrupa campo e botão numa única mensagem, então o valor que
-            # chega é sempre o mais atual. Custo: a legenda de erro deixa de
-            # atualizar a cada tecla e passa a atualizar só ao tentar entrar
-            # — a linha continua sempre presente (mesmo motivo de altura de
-            # sempre), só a atualização que virou "ao enviar" em vez de "ao
-            # digitar".
+            # Em st.form: sem form, o texto digitado só é sincronizado com o backend no blur/Enter do campo, num evento separado do clique do botão — clicar em "Acessar" logo depois de digitar podia disparar o rerun do botão ANTES desse sync chegar, e o clique via nome_digitado vazio, sem erro nenhum na tela (só um F5 — que força tudo a sincronizar de novo — resolvia). O form agrupa campo e botão numa única mensagem, então o valor que chega é sempre o mais atual. Custo: a legenda de erro deixa de atualizar a cada tecla e passa a atualizar só ao tentar entrar — a linha continua sempre presente (mesmo motivo de altura de sempre), só a atualização que virou "ao enviar" em vez de "ao digitar".
             with st.form("form_login_aluno", border=False):
                 nome_digitado = st.text_input(
                     "🎮 Seu apelido no jogo:", placeholder="Ex.: Goku99",
@@ -4754,33 +4377,16 @@ with st.sidebar:
                     if nome_digitado and not erro_apelido:
                         entrar_como_aluno(nome_digitado)
 
-    # <hr> com classe própria (não "---" cru): o <hr> padrão do Streamlit tem
-    # margem maior em cima do que embaixo, então a linha ficava mais perto de
-    # "Matéria Padrão" do que do "Acessar" — medido no DOM (51px acima, 32px
-    # abaixo), não só impressão visual. Margem assimétrica própria (ver CSS)
-    # corrige, compensando o espaço extra que o st.form do login já soma.
+    # <hr> com classe própria (não "---" cru): o <hr> padrão do Streamlit tem margem maior em cima do que embaixo, então a linha ficava mais perto de "Matéria Padrão" do que do "Acessar" — medido no DOM (51px acima, 32px abaixo), não só impressão visual. Margem assimétrica própria (ver CSS) corrige, compensando o espaço extra que o st.form do login já soma.
     st.markdown('<hr class="sidebar-divisor-identidade">', unsafe_allow_html=True)
 
     # --- Nível 2: as matérias. Clicar aqui ABRE a matéria (não "seleciona"
-    # uma matéria pra usar num botão lá de cima) — é isso que acaba com o
-    # modo escondido de antes. O progresso vai no próprio rótulo, então o
-    # menu responde "onde parei em cada matéria" sem nenhum bloco extra que
-    # cresça ou encolha. ---
+    # uma matéria pra usar num botão lá de cima) — é isso que acaba com o modo escondido de antes. O progresso vai no próprio rótulo, então o menu responde "onde parei em cada matéria" sem nenhum bloco extra que cresça ou encolha. ---
     concluidas_por_conteudo = progresso_resumo_aluno()
 
-    # Estatística vira UM item só no menu (Descritiva + Frequência + Leitura
-    # Crítica ficam dentro do hub, ver PAGINA_ESTATISTICA_HUB) — antes eram 3
-    # itens soltos competindo com Frações, Regra de Três etc., diluindo a
-    # identidade de Estatística que o orientador apontou como foco original
-    # do TCC (2026-09-11). Fica marcado como "ativo" também quando o aluno
-    # está DENTRO de um dos 3 sub-temas, não só na tela do hub em si.
+    # Estatística vira UM item só no menu (Descritiva + Frequência + Leitura Crítica ficam dentro do hub, ver PAGINA_ESTATISTICA_HUB) — antes eram 3 itens soltos competindo com Frações, Regra de Três etc., diluindo a identidade de Estatística. Fica marcado como "ativo" também quando o aluno está DENTRO de um dos 3 sub-temas, não só na tela do hub em si.
     #
-    # "Matéria Padrão" / "Matérias Cadastradas": dois rótulos, não um
-    # "Matérias" genérico, pra separar visualmente o conteúdo padrão do
-    # sistema (Estatística, o tema da defesa do TCC) dos que o professor
-    # cadastrou por conta própria — bate o olho e já dá pra distinguir os
-    # dois grupos. "Cadastradas" repete a mesma palavra que o Painel do
-    # Professor já usa ("📚 Conteúdos Cadastrados"), de propósito.
+    # "Matéria Padrão" / "Matérias Cadastradas": dois rótulos, não um "Matérias" genérico, pra separar visualmente o conteúdo padrão do sistema (Estatística) dos que o professor cadastrou por conta própria — bate o olho e já dá pra distinguir os dois grupos. "Cadastradas" repete a mesma palavra que o Painel do Professor já usa ("📚 Conteúdos Cadastrados"), de propósito.
     st.markdown('<div class="sidebar-secao">Matéria Padrão</div>', unsafe_allow_html=True)
     total_hub = sum(obter_total_missoes(cid) for cid in IDS_ESTATISTICA_HUB)
     rotulo_hub = "📊  Estatística"
@@ -4795,8 +4401,7 @@ with st.sidebar:
                  type="primary" if ativo_hub else "secondary"):
         ir_para_hub_estatistica()
 
-    # Fica em branco se o professor não tiver cadastrado nada ainda (o for
-    # de baixo simplesmente não desenha nenhum botão) — só o rótulo aparece.
+    # Fica em branco se o professor não tiver cadastrado nada ainda (o for de baixo simplesmente não desenha nenhum botão) — só o rótulo aparece.
     st.markdown('<div class="sidebar-secao sidebar-secao-espacada">Matérias Cadastradas</div>', unsafe_allow_html=True)
 
     for cid, conteudo_info in st.session_state.conteudos.items():
@@ -4812,14 +4417,11 @@ with st.sidebar:
                      type="primary" if ativo else "secondary"):
             ir_para_materia(cid)
 
-    # Mesma classe da linha entre Acessar/Matéria Padrão (ver acima): o <hr>
-    # cru do Streamlit não fica com espaço igual dos dois lados sozinho.
+    # Mesma classe da linha entre Acessar/Matéria Padrão (ver acima): o <hr> cru do Streamlit não fica com espaço igual dos dois lados sozinho.
     st.markdown('<hr class="sidebar-divisor-professor">', unsafe_allow_html=True)
 
     # --- Nível 1 de novo, separado: não faz parte do fluxo do aluno ---
-    # O 🔓 existe porque "estar autenticado como professor" era um modo
-    # escondido: dava pra continuar com o painel destravado sem nenhum sinal na
-    # tela, e só descobrir isso clicando. Mesmo problema que a navegação tinha.
+    # O 🔓 existe porque "estar autenticado como professor" era um modo escondido: dava pra continuar com o painel destravado sem nenhum sinal na tela, e só descobrir isso clicando. Mesmo problema que a navegação tinha.
     rotulo_professor = "🛡️  Painel do Professor"
     if sessao_professor_ativa():
         rotulo_professor += "  🔓"
@@ -4828,8 +4430,7 @@ with st.sidebar:
         st.session_state.pagina = PAGINA_PROFESSOR
         st.rerun()
 
-    # Botão da pesquisa (formulário externo): só aparece se o professor
-    # colou o endereço em Configurações. Abre em outra aba.
+    # Botão da pesquisa (formulário externo): só aparece se o professor colou o endereço em Configurações. Abre em outra aba.
     url_pesquisa = st.session_state.config.get("url_pesquisa", "")
     if url_pesquisa:
         st.markdown('<hr class="sidebar-divisor-professor">', unsafe_allow_html=True)
@@ -4849,22 +4450,13 @@ elif pagina == PAGINA_ESTATISTICA_HUB:
     render_pagina_estatistica_hub()
 
 elif pagina == PAGINA_MATERIA:
-    # Se o professor excluiu a matéria que estava aberta, cai no conteúdo nativo
-    # em vez de estourar KeyError.
+    # Se o professor excluiu a matéria que estava aberta, cai no conteúdo nativo em vez de estourar KeyError.
     if st.session_state.conteudo_ativo not in st.session_state.conteudos:
         st.session_state.conteudo_ativo = ID_CONTEUDO_ESTATISTICA
     cid = st.session_state.conteudo_ativo
     conteudo = st.session_state.conteudos[cid]
 
-    # Botão "← Voltar" em TODA matéria — sem ele, quem chegou aqui clicando
-    # num cartão da Início ou no hub de Estatística só tem como sair clicando
-    # de novo no menu lateral, o que nem todo aluno pensa em fazer sozinho. O
-    # botão Voltar do navegador não ajuda aqui (é uma SPA, não existe "página
-    # anterior" de verdade pro navegador voltar). Rótulo só "Voltar", sem
-    # dizer pra onde — não precisa, é óbvio pelo lugar. Os 6 sub-temas de
-    # Estatística voltam pro hub (é de lá que vieram); as demais matérias
-    # (cadastradas pelo professor) voltam direto pra Início, que é o único
-    # lugar de onde elas são abertas.
+    # Botão "← Voltar" em TODA matéria — sem ele, quem chegou aqui clicando num cartão da Início ou no hub de Estatística só tem como sair clicando de novo no menu lateral, o que nem todo aluno pensa em fazer sozinho. O botão Voltar do navegador não ajuda aqui (é uma SPA, não existe "página anterior" de verdade pro navegador voltar). Rótulo só "Voltar", sem dizer pra onde — não precisa, é óbvio pelo lugar. Os 6 sub-temas de Estatística voltam pro hub (é de lá que vieram); as demais matérias (cadastradas pelo professor) voltam direto pra Início, que é o único lugar de onde elas são abertas.
     if st.button("← Voltar", key="voltar_materia"):
         if cid in IDS_ESTATISTICA_HUB:
             ir_para_hub_estatistica()
@@ -4874,13 +4466,9 @@ elif pagina == PAGINA_MATERIA:
 
     st.title(f"{conteudo['icone']} {conteudo['titulo']}")
 
-    # Teoria x Missões é uma troca DENTRO da matéria (e a de maior frequência no
-    # app: o aluno lê a fórmula, tenta a missão, volta na fórmula), por isso fica
-    # colada no conteúdo e não no menu lateral. Dois botões em vez de
+    # Teoria x Missões é uma troca DENTRO da matéria (e a de maior frequência no app: o aluno lê a fórmula, tenta a missão, volta na fórmula), por isso fica colada no conteúdo e não no menu lateral. Dois botões em vez de
     # st.segmented_control de propósito: o segmented_control desmarca a opção
-    # quando você clica nela de novo (vira None), e aqui não existe "nenhuma
-    # seção selecionada". Botões também mantêm a mesma linguagem visual do menu
-    # lateral (ativo = type="primary").
+    # quando você clica nela de novo (vira None), e aqui não existe "nenhuma seção selecionada". Botões também mantêm a mesma linguagem visual do menu lateral (ativo = type="primary").
     col_teoria, col_missoes, _ = st.columns([1, 1, 3])
     with col_teoria:
         if st.button(ABA_TEORIA, use_container_width=True, key="aba_btn_teoria",
@@ -4904,9 +4492,7 @@ elif pagina == PAGINA_MATERIA:
         if not st.session_state.aluno_ativo:
             st.warning("⚠️ Olá! Escolha um apelido na barra lateral à esquerda para carregar o seu perfil e começar a ganhar XP.")
         else:
-            # Selo de XP em destaque no topo da Trilha de Missões — um lugar só,
-            # vale tanto pro conteúdo nativo de Estatística quanto pros
-            # cadastrados pelo professor, sem duplicar em cada função de missão.
+            # Selo de XP em destaque no topo da Trilha de Missões — um lugar só, vale tanto pro conteúdo nativo de Estatística quanto pros cadastrados pelo professor, sem duplicar em cada função de missão.
             xp_atual = perfil_atual()["xp_total"]
             st.markdown(
                 f'<div class="xp-destaque-missoes">'
@@ -4928,13 +4514,7 @@ elif pagina == PAGINA_MATERIA:
                 render_missoes_tendencia()
             else:
                 render_missoes_dinamicas(conteudo)
-            # Embaixo, não em cima: é onde o olhar do aluno já está depois de
-            # clicar em "Verificar Resposta" (mesma posição do "❌ Resposta
-            # incorreta", que fica logo abaixo do botão). Uma versão anterior
-            # mostrava isso no topo, junto do selo de XP — só visível rolando
-            # a tela pra cima, o que o Wenes apontou (2026-09-14) que recriava
-            # o mesmo problema de antes (informação fora de vista), só que
-            # em vez de sumir rápido, ficava escondida longe do clique.
+            # Embaixo, não em cima: é onde o olhar do aluno já está depois de clicar em "Verificar Resposta" (mesma posição do "❌ Resposta incorreta", que fica logo abaixo do botão). Uma versão anterior mostrava isso no topo, junto do selo de XP — só visível rolando a tela pra cima, o que recriava o mesmo problema de antes (informação fora de vista), só que em vez de sumir rápido, ficava escondida longe do clique.
             renderizar_ultimo_resultado(cid)
     elif cid == ID_CONTEUDO_ESTATISTICA:
         render_pagina_estatistica()
@@ -4952,11 +4532,7 @@ elif pagina == PAGINA_MATERIA:
         render_pagina_conteudo_dinamico(conteudo)
 
 elif pagina == PAGINA_PROFESSOR:
-    # "← Voltar" pra Início — diferente de "🚪 Sair" mais abaixo:
-    # Voltar só troca de tela, sem encerrar a sessão do professor (se
-    # estiver autenticado, continua autenticado ao clicar em Estatística ou
-    # Painel do Professor de novo, dentro dos 30 min); Sair encerra de
-    # propósito, pra passar o computador pra um aluno com segurança.
+    # "← Voltar" pra Início — diferente de "🚪 Sair" mais abaixo: Voltar só troca de tela, sem encerrar a sessão do professor (se estiver autenticado, continua autenticado ao clicar em Estatística ou Painel do Professor de novo, dentro dos 30 min); Sair encerra de propósito, pra passar o computador pra um aluno com segurança.
     if st.button("← Voltar", key="voltar_professor"):
         st.session_state.pagina = PAGINA_INICIO
         st.rerun()
@@ -4973,30 +4549,19 @@ elif pagina == PAGINA_PROFESSOR:
             else:
                 st.error("❌ Senha incorreta.")
     else:
-        # Renova o prazo a cada uso do painel: o tempo passa a contar do último
-        # uso, não do login, então a sessão não expira no meio de um cadastro.
+        # Renova o prazo a cada uso do painel: o tempo passa a contar do último uso, não do login, então a sessão não expira no meio de um cadastro.
         abrir_sessao_professor()
         _, colB = st.columns([4, 1])
         with colB:
             # Empurra o botão pra borda direita SEM esticar ele — usar
             # use_container_width=True (tentativa anterior) alargava o botão
-            # até preencher a coluna inteira, o que não é a mesma coisa que
-            # MOVER um botão de tamanho normal pra direita (Wenes, 2026-09-14
-            # apontou a diferença). O container vira flex com
-            # justify-content:flex-end, que empurra o filho (o botão, do
-            # próprio tamanho) pra ponta, sem mudar a largura dele.
+            # até preencher a coluna inteira, o que não é a mesma coisa que MOVER um botão de tamanho normal pra direita. O container vira flex com justify-content:flex-end, que empurra o filho (o botão, do próprio tamanho) pra ponta, sem mudar a largura dele.
             with st.container(key="acao_sair_professor"):
                 if st.button("🚪 Sair"):
                     encerrar_sessao_professor()
                     st.rerun()
 
-        # Botões em vez de st.tabs(): a seleção do st.tabs() é client-side e
-        # volta pra primeira aba sozinha quando a árvore de elementos muda —
-        # e é exatamente o que acontece aqui (o formulário de editar
-        # conteúdo desaparece da tela ao salvar). Relatado pelo Wenes
-        # (2026-09-17): editou um conteúdo, salvou, e caiu de volta em
-        # "Visão Geral" em vez de continuar em "Gerenciar Conteúdos". Mesmo
-        # padrão e mesmo motivo do toggle Teoria/Missões (ver ir_para_materia).
+        # Botões em vez de st.tabs(): a seleção do st.tabs() é client-side e volta pra primeira aba sozinha quando a árvore de elementos muda — e é exatamente o que acontece aqui (o formulário de editar conteúdo desaparece da tela ao salvar). Caso típico: editar um conteúdo, salvar, e cair de volta em "Visão Geral" em vez de continuar em "Gerenciar Conteúdos". Mesmo padrão e mesmo motivo do toggle Teoria/Missões (ver ir_para_materia).
         col_ab1, col_ab2, col_ab3 = st.columns(3)
         with col_ab1:
             if st.button(ABA_PROFESSOR_VISAO, use_container_width=True, key="aba_btn_professor_visao",

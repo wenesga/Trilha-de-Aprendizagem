@@ -61,8 +61,7 @@ def completar(descricao_layout, descricao_raw):
 
 
 def sem_notas_de_rodape(texto):
-    # O -raw mistura o número da nota de rodapé no meio da frase ("propostas 1 de
-    # governo"). Só um algarismo solto entre palavras em minúsculas.
+    # O -raw mistura o número da nota de rodapé no meio da frase ("propostas 1 de governo"). Só um algarismo solto entre palavras em minúsculas.
     return re.sub(r"(?<=[a-zà-ú,]) \d(?= [a-zà-ú])", "", texto)
 
 
@@ -120,8 +119,7 @@ def main():
         h = extrair_habilidades(extrair_texto(pdf, "-layout"), padrao)
         bruto = extrair_habilidades_bruto(extrair_texto(pdf, "-raw"), padrao)
         corrigidas = 0
-        # Código que o -layout não pegou no começo de linha, mas existe no -raw:
-        # fica com a primeira frase depois do código.
+        # Código que o -layout não pegou no começo de linha, mas existe no -raw: fica com a primeira frase depois do código.
         for codigo, descricao_raw in bruto.items():
             if codigo not in h:
                 for m in re.finditer(r"[.;](?=\s|$)", descricao_raw):
