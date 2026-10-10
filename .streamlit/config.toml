@@ -10,3 +10,7 @@ primaryColor = "#1f4e9a"
 
 [theme.dark]
 primaryColor = "#3376cb"
+
+[runner]
+# Desligado: com ele ligado, o Streamlit exibe na tela qualquer texto solto no codigo (inclusive blocos de comentario entre aspas triplas).
+magicEnabled = false
