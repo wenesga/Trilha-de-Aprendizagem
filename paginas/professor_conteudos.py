@@ -3,7 +3,6 @@
 import uuid
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 from bncc import (
     campo_habilidade_bncc,
@@ -165,15 +164,15 @@ def render_gerenciar_conteudos():
         Ao clicar em "Editar" na lista, o formulário aparece mais abaixo sem aviso; a tela rola
         sozinha até ele.
         """
-        components.html(
+        st.iframe(
             """
             <script>
             const ancora = window.parent.document.getElementById('ancora-form-conteudo');
             if (ancora) { ancora.scrollIntoView({behavior: 'smooth', block: 'start'}); }
             </script>
             """,
-            height=0,
-            width=0,
+            height=1,
+            width=1,
         )
     else:
         st.subheader("➕ Criar Novo Conteúdo")
