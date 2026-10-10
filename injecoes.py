@@ -2,7 +2,7 @@
 
 import os
 
-import streamlit.components.v1 as components
+import streamlit as st
 
 
 def _injetar_manifest_pwa():
@@ -17,7 +17,7 @@ def _injetar_manifest_pwa():
     """
     if not os.path.exists("static/manifest.json"):
         return
-    components.html(
+    st.iframe(
         """
         <script>
         (function() {
@@ -40,8 +40,8 @@ def _injetar_manifest_pwa():
         })();
         </script>
         """,
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 
@@ -56,7 +56,7 @@ def _injetar_bloqueio_espaco_apelido():
 
     É conveniência de digitação, não validação: apelido_invalido() continua valendo no servidor.
     """
-    components.html(
+    st.iframe(
         """
         <script>
         (function() {
@@ -81,8 +81,8 @@ def _injetar_bloqueio_espaco_apelido():
         })();
         </script>
         """,
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 
@@ -94,7 +94,7 @@ def _injetar_aviso_saida():
     do navegador sai do app sem aviso. O texto do aviso é fixo (definido pelo navegador); só é
     possível ligá-lo ou desligá-lo.
     """
-    components.html(
+    st.iframe(
         """
         <script>
         (function() {
@@ -108,8 +108,8 @@ def _injetar_aviso_saida():
         })();
         </script>
         """,
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 
@@ -122,7 +122,7 @@ def _injetar_liberar_scroll_grafico():
     scroll na fase de captura (que roda antes) e, se o alvo estiver dentro de um gráfico, rolar
     manualmente a área principal (.stMain).
     """
-    components.html(
+    st.iframe(
         """
         <script>
         (function() {
@@ -140,8 +140,8 @@ def _injetar_liberar_scroll_grafico():
         })();
         </script>
         """,
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 
@@ -153,7 +153,7 @@ def _injetar_clique_logo_inicio():
     (".st-key-sidebar_cabecalho") e, se não foi um clique direto no botão do título, simula um
     clique nele, reaproveitando a navegação existente.
     """
-    components.html(
+    st.iframe(
         """
         <script>
         (function() {
@@ -170,8 +170,8 @@ def _injetar_clique_logo_inicio():
         })();
         </script>
         """,
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 
