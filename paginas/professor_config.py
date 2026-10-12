@@ -106,7 +106,7 @@ def render_configuracoes():
         st.session_state.config["ultimo_foco_meta_xp"] = conteudo_foco
         salvar_config(st.session_state.config)
     if conteudo_foco == "__catalogo__":
-        valor_padrao_meta = int(st.session_state.config.get("meta_xp") or (xp_catalogo_hoje / 2))
+        valor_padrao_meta = int(st.session_state.get("meta_xp_sessao") or xp_catalogo_hoje)
     else:
         xp_referencia = xp_maximo_de_conteudo(conteudo_foco, st.session_state.conteudos[conteudo_foco])
         st.caption(f"💡 \"{opcoes_conteudo[conteudo_foco]}\" vale até **{xp_referencia} XP** — já preenchido abaixo. Reduza se quiser uma meta mais fácil.")
@@ -125,8 +125,8 @@ def render_configuracoes():
             key=f"meta_xp_input_{conteudo_foco}",
         )
         if st.form_submit_button("Salvar"):
-            st.session_state.config["meta_xp"] = int(meta_xp_input)
-            salvar_config(st.session_state.config)
+            # A meta digitada vale só nesta sessão; não é gravada em disco.
+            st.session_state["meta_xp_sessao"] = int(meta_xp_input)
             flash("Salvo com sucesso!")
             st.rerun()
 
