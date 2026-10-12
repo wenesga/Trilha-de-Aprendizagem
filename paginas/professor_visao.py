@@ -205,7 +205,7 @@ def render_desempenho_turma():
         return
 
     _, _, xp_catalogo_total = xp_maximo_catalogo_atual()
-    meta_xp = st.session_state.config.get("meta_xp") or (xp_catalogo_total / 2)
+    meta_xp = st.session_state.get("meta_xp_sessao") or xp_catalogo_total
 
     lista_geral = []
     for nome, perfil in alunos.items():
