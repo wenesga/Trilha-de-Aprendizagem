@@ -47,9 +47,9 @@ São **6 conteúdos** e **44 missões**, cada um ligado a uma habilidade da BNCC
 | Conteúdo | Habilidade | Missões |
 |---|:---:|:---:|
 | 📈 Estatística Descritiva | `EM13MAT316` | 10 |
-| 📊 Tabela e Gráfico de Frequência | `EM13MAT408` | 8 |
+| 📊 Tabela e Gráfico de Frequência | `EM13MAT406` | 8 |
 | 🔍 Leitura Crítica de Gráficos | `EM13MAT102` | 8 |
-| 📦 Comparando Diagramas | `EM13MAT409` | 6 |
+| 📦 Comparando Diagramas | `EM13MAT407` | 6 |
 | 📝 Planejando uma Pesquisa | `EM13MAT202` | 6 |
 | 🔗 Relação entre Duas Variáveis | `EM13MAT510` | 6 |
 

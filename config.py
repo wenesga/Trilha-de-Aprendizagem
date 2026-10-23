@@ -37,9 +37,9 @@ Cores suaves dos cartões de conteúdo, usadas em ciclo (ver CSS .cartao-cor-*).
 PALETA_CORES_CARTAO = ["azul", "roxo", "rosa", "amarelo", "verde", "ciano"]
 
 ID_CONTEUDO_ESTATISTICA = "estatistica"                    # id fixo do conteúdo nativo do sistema
-ID_CONTEUDO_FREQUENCIA = "estatistica_frequencia"          # id fixo do 2º conteúdo nativo (EM13MAT408, reusa os mesmos dados)
+ID_CONTEUDO_FREQUENCIA = "estatistica_frequencia"          # id fixo do 2º conteúdo nativo (EM13MAT406, reusa os mesmos dados)
 ID_CONTEUDO_LEITURA_GRAFICA = "estatistica_leitura_grafica"  # id fixo do 3º conteúdo nativo (EM13MAT102, cenário fixo)
-ID_CONTEUDO_COMPARACAO = "estatistica_comparacao_diagramas"  # id fixo do 4º conteúdo nativo (EM13MAT409, reusa os mesmos dados)
+ID_CONTEUDO_COMPARACAO = "estatistica_comparacao_diagramas"  # id fixo do 4º conteúdo nativo (EM13MAT407, reusa os mesmos dados)
 ID_CONTEUDO_PESQUISA_AMOSTRAL = "estatistica_pesquisa_amostral"  # id fixo do 5º conteúdo nativo (EM13MAT202, decisões de planejamento)
 ID_CONTEUDO_TENDENCIA = "estatistica_tendencia"  # id fixo do 6º conteúdo nativo (EM13MAT510, cenário próprio — não usa dados_estatistica)
 
@@ -107,10 +107,9 @@ Mapeamento das missões dos conteúdos nativos para habilidades da BNCC (um dici
 indexado pelo id). Fica no código porque essas missões não estão em conteudos.json.
 
 - Estatística Descritiva (10 missões): EM13MAT316, medidas de tendência central e de dispersão.
-- Tabela e Gráfico de Frequência (FREQ_N_FAIXAS+3): EM13MAT408, tabelas e gráficos de frequência.
-  Não confundir com EM13MAT406 (linguagem de programação).
+- Tabela e Gráfico de Frequência (FREQ_N_FAIXAS+3): EM13MAT406, tabelas e gráficos de frequência.
 - Leitura Crítica de Gráficos (8): EM13MAT102, análise de gráficos e amostras divulgados na mídia.
-- Comparando Diagramas (6): EM13MAT409, comparação de diagramas (histograma, box-plot, ramos e
+- Comparando Diagramas (6): EM13MAT407, comparação de diagramas (histograma, box-plot, ramos e
   folhas).
 - Planejando uma Pesquisa (6): EM13MAT202, planejamento de pesquisa amostral. Como o app não coleta
   dado real, a sequência é de decisões (população x amostra, tamanho, conteúdo do relatório).
@@ -122,9 +121,9 @@ no relatório é pior que nenhum.
 """
 BNCC_MISSOES_NATIVAS = {
     ID_CONTEUDO_ESTATISTICA: {i: "EM13MAT316" for i in range(1, 11)},
-    ID_CONTEUDO_FREQUENCIA: {i: "EM13MAT408" for i in range(1, FREQ_N_FAIXAS + 4)},
+    ID_CONTEUDO_FREQUENCIA: {i: "EM13MAT406" for i in range(1, FREQ_N_FAIXAS + 4)},
     ID_CONTEUDO_LEITURA_GRAFICA: {i: "EM13MAT102" for i in range(1, 9)},
-    ID_CONTEUDO_COMPARACAO: {i: "EM13MAT409" for i in range(1, 7)},
+    ID_CONTEUDO_COMPARACAO: {i: "EM13MAT407" for i in range(1, 7)},
     ID_CONTEUDO_PESQUISA_AMOSTRAL: {i: "EM13MAT202" for i in range(1, 7)},
     ID_CONTEUDO_TENDENCIA: {i: "EM13MAT510" for i in range(1, 7)},
 }

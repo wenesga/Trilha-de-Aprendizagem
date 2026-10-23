@@ -1,4 +1,4 @@
-"""Gera o habilidades_bncc.json a partir do PDF oficial da BNCC (Ensino Médio).
+"""Gera o habilidades_bncc.json a partir do PDF oficial da BNCC homologada.
 
 Roda UMA vez (e de novo só se a BNCC mudar). O aplicativo lê o JSON pronto, nunca
 o PDF. Uso, dentro da pasta Trilha_de_Aprendizagem:
@@ -21,14 +21,15 @@ PASTA_ARQUIVOS = Path(__file__).resolve().parent
 SAIDA = PASTA_ARQUIVOS.parent / "habilidades_bncc.json"
 
 # (arquivo, padrão do código). A habilidade aparece como "(EM13MAT316) Texto...".
+# A BNCC homologada traz Educação Infantil, Ensino Fundamental e Ensino Médio num só arquivo.
 FONTES = [
-    ("BNCC_EnsinoMedio.pdf", r"EM13[A-Z]{2,3}\d{2,3}"),
+    ("BNCC_EI_EF_110518_versaofinal_site.pdf", r"EM13[A-Z]{2,3}\d{2,3}"),
     # Computação na Educação Básica (complemento à BNCC): só as do Ensino Médio.
     ("BNCC - Computação.pdf", r"EM13CO\d{2}"),
 ]
 INCLUIR_FUNDAMENTAL = True
 if INCLUIR_FUNDAMENTAL:
-    FONTES.append(("BNCC_EI_EF_110518_versaofinal.pdf", r"EF\d{2}[A-Z]{2}\d{2}"))
+    FONTES.append(("BNCC_EI_EF_110518_versaofinal_site.pdf", r"EF\d{2}[A-Z]{2}\d{2}"))
 
 # Marcadores que encerram a descrição de uma habilidade.
 FIM_DESCRICAO = r"(?:\n[ \t]*\n|\n[ \t]*(?:COMPET[ÊE]NCIA|HABILIDADES|Campo|Eixo|Quadro)\b)"
