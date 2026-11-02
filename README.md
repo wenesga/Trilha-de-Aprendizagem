@@ -42,6 +42,24 @@ A **Trilha de Aprendizagem** nasceu no TCC de Licenciatura em Computação (UFT/
 
 ---
 
+## 📸 TELAS
+
+As capturas usam apelidos e dados de teste.
+
+**Conteúdos de Estatística**
+
+![Tela Estatística, com os seis conteúdos](capturas/estatistica.png)
+
+**Missão com correção imediata e XP**
+
+![Missão da Trilha de Missões, com correção e XP](capturas/missao.png)
+
+**Acerto por habilidade da BNCC no Painel do Professor**
+
+![Painel do Professor, com o acerto de cada aluno por habilidade](capturas/painel-acerto.png)
+
+---
+
 ## 📊 CONTEÚDOS DE ESTATÍSTICA
 
 São **6 conteúdos** e **44 missões**, cada um ligado a uma habilidade da BNCC do Ensino Médio.
