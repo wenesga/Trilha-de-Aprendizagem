@@ -2,9 +2,11 @@
 
 Gamificação no ensino de Estatística do Ensino Médio: o aluno estuda a teoria, responde às missões, ganha XP e o professor acompanha o acerto da turma em cada habilidade da BNCC.
 
-<p align="center">
-  <a href="https://trilha-aprendizagem.streamlit.app/"><b>🚀 ABRIR O APLICATIVO</b></a>
-</p>
+**🚀 Acesse o aplicativo:**
+
+- [Demonstração](https://trilha-aprendizagem.streamlit.app/) (Streamlit): o serviço gratuito apaga os dados ao reiniciar.
+- [Servidor Oracle](https://trilhaaprendizagem.duckdns.org/): mantém os dados.
+- [Servidor pago](https://trilhaestatistica.com.br/): mantém os dados.
 
 ---
 
