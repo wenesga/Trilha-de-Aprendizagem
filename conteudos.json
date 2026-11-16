@@ -1,4 +1,184 @@
 {
+  "conteudo_caf99fd2": {
+    "titulo": "Matemática Financeira",
+    "icone": "💰",
+    "tipo": "dinamico",
+    "descricao": "Juros simples e compostos: calcule montante, juros, taxa, tempo e quanto aplicar, do mais fácil ao mais difícil.",
+    "teoria": [
+      {
+        "titulo": "O que são juros simples?",
+        "texto": "Nos **juros simples**, os juros de cada período são calculados sempre sobre o **capital inicial**. Por isso, os juros são iguais em todos os meses.\n\n- **C**: capital (valor aplicado ou emprestado)\n- **i**: taxa de juros, escrita em decimal (4% = 0,04)\n- **t**: tempo, na mesma unidade da taxa\n- **J**: juros\n- **M**: montante (capital + juros)\n\n$J = C \\cdot i \\cdot t$\n\n$M = C + J$\n\n**Exemplo resolvido:** R$ 2.000,00 aplicados a 3% ao mês durante 5 meses.\n\n- J = 2000 · 0,03 · 5 = **R$ 300,00**\n- M = 2000 + 300 = **R$ 2.300,00**"
+      },
+      {
+        "titulo": "Juros simples: descobrindo o capital, a taxa ou o tempo",
+        "texto": "Quando o problema dá os juros e pede outro valor, basta isolar a letra na fórmula $J = C \\cdot i \\cdot t$.\n\n- Capital: $C = \\dfrac{J}{i \\cdot t}$\n- Taxa: $i = \\dfrac{J}{C \\cdot t}$\n- Tempo: $t = \\dfrac{J}{C \\cdot i}$\n\nSe o problema der o montante, calcule primeiro os juros: J = M − C.\n\n**Exemplo resolvido:** R$ 800,00 viraram R$ 920,00 em 5 meses. Qual a taxa mensal?\n\n- J = 920 − 800 = 120\n- i = 120 ÷ (800 · 5) = 120 ÷ 4000 = 0,03 = **3% ao mês**\n\nAtenção à unidade do tempo: um **semestre** tem 6 meses e um **ano** tem 12 meses."
+      },
+      {
+        "titulo": "O que são juros compostos?",
+        "texto": "Nos **juros compostos**, os juros de cada período entram no saldo e passam a render juros no período seguinte: são os **juros sobre juros**. É o regime usado em aplicações, financiamentos e cartões de crédito.\n\n$M = C \\cdot (1 + i)^t$\n\n$J = M - C$\n\n**Exemplo resolvido:** R$ 1.000,00 a 10% ao mês durante 3 meses.\n\n- M = 1000 · (1,10)³ = 1000 · 1,331 = **R$ 1.331,00**\n- J = 1331 − 1000 = **R$ 331,00**\n\nA juros simples, seriam só R$ 300,00 de juros. A diferença vem dos juros sobre juros."
+      },
+      {
+        "titulo": "Juros compostos: quanto aplicar hoje?",
+        "texto": "Quando se sabe o valor que se quer ter no futuro (M), basta dividir pelo fator de correção:\n\n$C = \\dfrac{M}{(1 + i)^t}$\n\n**Exemplo resolvido:** quanto aplicar hoje, a 10% ao mês, para ter R$ 1.331,00 em 3 meses?\n\n- C = 1331 ÷ (1,10)³ = 1331 ÷ 1,331 = **R$ 1.000,00**"
+      },
+      {
+        "titulo": "Juros compostos: descobrindo o tempo",
+        "texto": "Para achar o tempo, usamos logaritmo:\n\n$t = \\dfrac{\\log(M \\div C)}{\\log(1 + i)}$\n\n**Exemplo resolvido:** em quanto tempo R$ 1.000,00 vira R$ 1.331,00 a 10% ao mês?\n\n- M ÷ C = 1,331\n- t = log 1,331 ÷ log 1,10 = 0,1242 ÷ 0,0414 = **3 meses**\n\nO tempo sai na mesma unidade da taxa. Se a taxa for ao **semestre**, multiplique o resultado por 6 para ter meses."
+      }
+    ],
+    "missoes": [
+      {
+        "titulo": "Capital inicial",
+        "pergunta": "Um pequeno empreendedor aplicou uma quantia em um investimento de liquidez diária, que rende a uma taxa de juros simples de 4% ao mês. Ao final de um semestre, essa aplicação gerou exatamente R$ 1.200,00 de juros para o investidor. Qual foi o valor do capital inicial aplicado?",
+        "resposta": "R$ 5.000,00",
+        "tipo": "multipla",
+        "alternativas": [
+          "R$ 1.248,00",
+          "R$ 1.488,00",
+          "R$ 3.000,00",
+          "R$ 5.000,00",
+          "R$ 30.000,00"
+        ],
+        "pontos": 10,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Taxa mensal",
+        "pergunta": "Gabriela aplicou um capital de R$ 900,00, a juros simples, em um título de renda fixa. Após 8 meses de aplicação, ela resgatou um montante de R$ 1.116,00. Qual foi a taxa mensal de juros simples?",
+        "resposta": "3,00% a.m.",
+        "tipo": "multipla",
+        "alternativas": [
+          "2,40% a.m.",
+          "3,00% a.m.",
+          "15,50% a.m.",
+          "24,00% a.m.",
+          "27,00% a.m."
+        ],
+        "pontos": 10,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Dívida no cartão",
+        "pergunta": "Um consumidor acumulava uma dívida de R$ 2.500,00 no limite rotativo do cartão de crédito. Após 3 meses de atraso, a dívida passou a ser de R$ 3.850,00. Considerando juros simples sobre o valor inicial, qual foi a taxa mensal cobrada?",
+        "resposta": "18% a.m.",
+        "tipo": "multipla",
+        "alternativas": [
+          "12% a.m.",
+          "18% a.m.",
+          "27% a.m.",
+          "54% a.m.",
+          "135% a.m."
+        ],
+        "pontos": 15,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Tempo da aplicação",
+        "pergunta": "Um investidor aplicou R$ 1.500,00 em um título remunerado a 0,8% ao mês, sob o regime de juros simples. Ao final, resgatou R$ 2.220,00. Qual foi o tempo de duração dessa aplicação?",
+        "resposta": "60 meses",
+        "tipo": "multipla",
+        "alternativas": [
+          "24 meses",
+          "36 meses",
+          "48 meses",
+          "60 meses",
+          "72 meses"
+        ],
+        "pontos": 15,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Montante em 4 meses",
+        "pergunta": "Paulo realizou uma aplicação de R$ 5.000,00 em um fundo de renda fixa que rende juros compostos de 2% ao mês. Qual será o montante aproximado ao final de 4 meses?",
+        "resposta": "R$ 5.412,00",
+        "tipo": "multipla",
+        "alternativas": [
+          "R$ 5.400,00",
+          "R$ 5.412,00",
+          "R$ 5.424,00",
+          "R$ 5.450,00",
+          "R$ 5.800,00"
+        ],
+        "pontos": 10,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Juros em um ano",
+        "pergunta": "Carol investiu R$ 5.000,00 a juros compostos de 1,4% a.m. durante um ano. Qual será, aproximadamente, o valor dos juros obtidos?",
+        "resposta": "R$ 907,80",
+        "tipo": "multipla",
+        "alternativas": [
+          "R$ 719,80",
+          "R$ 840,00",
+          "R$ 907,80",
+          "R$ 2.000,00",
+          "R$ 5.907,80"
+        ],
+        "pontos": 15,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Quanto aplicar hoje",
+        "pergunta": "Um jovem precisará de R$ 9.600,00 daqui a 6 meses para um intercâmbio. Ele fará uma única aplicação hoje em um fundo que rende juros compostos de 2% ao mês. Qual é o valor aproximado a aplicar hoje?",
+        "resposta": "R$ 8.533,33",
+        "tipo": "multipla",
+        "alternativas": [
+          "R$ 8.448,00",
+          "R$ 8.533,33",
+          "R$ 8.727,27",
+          "R$ 9.408,00",
+          "R$ 10.800,00"
+        ],
+        "pontos": 15,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Dobrar o capital",
+        "pergunta": "Um investidor deseja saber em quanto tempo um capital aplicado a uma taxa fixa de 5% ao mês, sob juros compostos, irá dobrar de valor. Qual o tempo aproximado necessário?",
+        "resposta": "14,3 meses",
+        "tipo": "multipla",
+        "alternativas": [
+          "7,1 meses",
+          "10,0 meses",
+          "14,3 meses",
+          "20,0 meses",
+          "23,8 meses"
+        ],
+        "pontos": 20,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Juros em três meses",
+        "pergunta": "Uma senhora deixou R$ 2.100,00 aplicados por três meses, sob juros compostos de 5% a.m. Qual será o valor dos juros obtidos?",
+        "resposta": "R$ 331,01",
+        "tipo": "multipla",
+        "alternativas": [
+          "R$ 315,00",
+          "R$ 331,01",
+          "R$ 105,01",
+          "R$ 2.431,01",
+          "R$ 3.150,00"
+        ],
+        "pontos": 15,
+        "bncc": "EM13MAT303"
+      },
+      {
+        "titulo": "Taxa semestral",
+        "pergunta": "Em uma aplicação de R$ 15.000,00 a juros compostos de 8% ao semestre, quantos meses serão necessários, aproximadamente, para obter R$ 21.600,00?",
+        "resposta": "28,4 meses",
+        "tipo": "multipla",
+        "alternativas": [
+          "18,4 meses",
+          "24,0 meses",
+          "28,4 meses",
+          "36,0 meses",
+          "42,5 meses"
+        ],
+        "pontos": 20,
+        "bncc": "EM13MAT303"
+      }
+    ]
+  },
   "perimetro_area_figuras_planas": {
     "titulo": "Perímetro e Área de Figuras Planas",
     "icone": "📐",
